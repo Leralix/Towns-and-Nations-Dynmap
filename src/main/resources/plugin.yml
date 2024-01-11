@@ -2,3 +2,4 @@ name: Towns_And_Nations_Dynmap
 version: '${version}'
 main: org.leralix.towns_and_nations_dynmap.TownsAndNations_Dynmap
 api-version: '1.20'
+depend:  [TownsAndNations, dynmap]

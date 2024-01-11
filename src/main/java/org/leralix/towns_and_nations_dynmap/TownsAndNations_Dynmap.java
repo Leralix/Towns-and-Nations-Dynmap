@@ -1,7 +1,6 @@
 package org.leralix.towns_and_nations_dynmap;
 
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -9,16 +8,17 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.dynmap.DynmapAPI;
 import org.dynmap.markers.*;
+import org.tan.TownsAndNations.DataClass.ClaimedChunk;
 import org.tan.TownsAndNations.TownsAndNations;
+import org.tan.TownsAndNations.storage.TownDataStorage;
 
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.logging.Logger;
 
 
-public final class TownsAndNationDynmap extends JavaPlugin {
+public final class TownsAndNations_Dynmap extends JavaPlugin {
 
-    private static TownsAndNationDynmap plugin;
+    private static TownsAndNations_Dynmap plugin;
 
     private static final String DEF_INFOWINDOW = "<div class=\"infowindow\"><span style=\"font-size:120%;\">%regionname%</span><br /> Owners <span style=\"font-weight:bold;\">%playerowners%</span><br/>Members <span style=\"font-weight:bold;\">%playermembers%</span><br/>Flags<br /><span style=\"font-weight:bold;\">%flags%</span></div>";
 
@@ -174,44 +174,36 @@ public final class TownsAndNationDynmap extends JavaPlugin {
         updperiod = per* 20L;
         stop = false;
 
-        getServer().getScheduler().scheduleSyncDelayedTask(this, new PreciousStonesUpdate(), 40);   /* First time is 2 seconds */
+        getServer().getScheduler().scheduleSyncDelayedTask(this, new Update(), 40);   /* First time is 2 seconds */
 
         getLogger().info("version " + this.getDescription().getVersion() + " is activated");
 
-        MarkerIcon icon = markerAPI.getMarkerIcon("building");
-        String htmlLabel = "<div>Hello World</div>";
-        set.createMarker("uniqueMarkerId", htmlLabel, true,
-                "world", 10, 20, 30, icon, false);
-
     }
 
-    private class PreciousStonesUpdate implements Runnable {
+    private class Update implements Runnable {
         public void run() {
             if(!stop)
-                updateForceFields();
+                Update();
         }
     }
 
-    private void updateForceFields() {
+    private void Update() {
+
+        System.out.println("Update !");
+
         Map<String,AreaMarker> newmap = new HashMap<>(); /* Build new map */
+
+        for(ClaimedChunk chunk : TownsAndNations.getAPI().getChunkList()) {
+            handleChunk(chunk, newmap);
+        }
+
+
+
 
         double[] x = new double[] { 1, 10 };
         double[] z = new double[] { 1, 10 };
 
 
-        String markerid = "test";
-        AreaMarker m = resareas.remove(markerid); /* Existing area? */
-        if(m == null) {
-            m = set.createAreaMarker(markerid, "name", false, Bukkit.getWorlds().get(0).getName(), x, z, false);
-            if(m == null)
-                return;
-        }
-        else {
-            m.setCornerLocations(x, z); /* Replace corner locations */
-            m.setLabel("newname");   /* Update label */
-        }
-
-        newmap.put("test", null);
 
 
         /* Now, review old map - anything left is gone */
@@ -222,12 +214,29 @@ public final class TownsAndNationDynmap extends JavaPlugin {
         resareas = newmap;
 
         /* And schedule next update */
-        getServer().getScheduler().scheduleSyncDelayedTask(this, new PreciousStonesUpdate(), updperiod);
+        getServer().getScheduler().scheduleSyncDelayedTask(this, new Update(), updperiod);
 
     }
 
-    private void handleField(World world, Field field, Map<String, AreaMarker> newmap) {
+    private void handleChunk(ClaimedChunk chunk, Map<String, AreaMarker> newmap) {
 
+        String markerid = chunk.getWorldUUID() + "_" + chunk.getX() + "_" + chunk.getZ();
+
+        double[] x = new double[] { chunk.getX()*16, chunk.getX()*16 + 16 };
+        double[] z = new double[] { chunk.getZ()*16, chunk.getZ()*16 + 16 };
+
+        AreaMarker m = resareas.remove(markerid);
+        if(m == null) {
+            m = set.createAreaMarker(markerid, TownDataStorage.get(chunk.getTownID()).getName(), false, Bukkit.getWorlds().get(0).getName(), x, z, false);
+            if(m == null)
+                return;
+        }
+        else {
+            m.setCornerLocations(x, z); /* Replace corner locations */
+            m.setLabel(TownDataStorage.get(chunk.getTownID()).getName());   /* Update label */
+        }
+
+        newmap.put(markerid, null);
     }
 
 
@@ -236,7 +245,7 @@ public final class TownsAndNationDynmap extends JavaPlugin {
         // Plugin shutdown logic
     }
 
-    public static TownsAndNationDynmap getPlugin(){
+    public static TownsAndNations_Dynmap getPlugin(){
         return plugin;
     }
 
