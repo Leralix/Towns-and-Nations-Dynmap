@@ -50,10 +50,9 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
         Plugin dynmap;
         Plugin TaN;
 
-        logger.info("\u001B[33m--------------Towns & Nations Dynmap----------------\u001B[0m");
 
 
-        logger.info("[TaN] -Loading Plugin");
+        logger.info("[TaN - Dynmap] -Loading Plugin");
 
         //get Dynmap
         dynmap = pm.getPlugin("dynmap");
@@ -72,8 +71,6 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
         DynmapAPI dynmapAPI = (DynmapAPI) dynmap;
         TownsAndNations TanApi = (TownsAndNations) TaN;
 
-        logger.info("Nom du plugin tan: " + TanApi.getName());
-        logger.info("Nom du plugin dynmap: " + dynmapAPI.getDynmapVersion());
 
 
         initialise(dynmapAPI, TanApi);
@@ -86,10 +83,6 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
 
 
 
-
-
-
-        getLogger().info("\u001B[33m--------------Towns & Nations Dynmap----------------\u001B[0m");
 
     }
 
