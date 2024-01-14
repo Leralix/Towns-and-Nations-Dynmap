@@ -1,7 +1,7 @@
 # Dynmap-TAN configuration
 #
 update:
-  # Seconds between checks for PreciousStones updates
+  # Seconds between checks for TownsAndNations updates
   period: 300
 
 layer:
@@ -14,7 +14,7 @@ layer:
   minzoom: 0
 
 # Set true to show 3D volumes for fields
-use3dregions: false
+use3dfields: false
 
 # Format for popup - substitute values for macros: use %<flagname>% for value of specific flag
 infowindow: '<div class=\"infowindow\"><span style=\"font-size:120%;">%regionname%</span><br /> Owners <span style="font-weight:bold;">%playerowners%</span><br/>Members <span style="font-weight:bold;">%playermembers%</span><br/>Flags<br /><span style="font-weight:bold;">%flags%</span></div>'
@@ -25,46 +25,3 @@ fieldstyle:
   strokeWeight: 3
   fillColor: "#FF0000"
   fillOpacity: 0.35
-
-# Optional setting to limit which fields to show, by type - if commented out, all fields are shown
-# To show all fields on a given world, add 'world:<worldname>' to the list.  For given owner, "owner:<ownername>"
-visiblefields:
-  - "City Protection"
-  - "Entry Bouncer"
-  - "Grief Revert"
-  - "Proximity Snitch"
-  - "Peace Keeper"
-  - "GodStone"
-  - "Creature Repeller"
-
-# Optional setting to hide specific fields, by name
-# To hide all fields on a given world, add 'world:<worldname>' to the list.  For given owner, "owner:<ownername>"
-hiddenfields: [ ]
-
-# Optional per-field overrides for fieldstyle (any defined replace those in fieldstyle)
-#  Also supports field IDs with single wildcard '|' pattern
-custstyle:
-  "City Protection":
-    strokeColor: "#336666"
-    fillColor: "#66CCCC"
-  "Entry Bouncer":
-    strokeColor: "#000066"
-    fillColor: "#000099"
-  "Grief Revert":
-    strokeColor: "#999900"
-    fillColor: "#FFFF00"
-  "Proximity Snitch":
-    strokeColor: "#666633"
-    fillColor: "#996633"
-  "Peace Keeper":
-    strokeColor: "#999900"
-    fillColor: "#999900"
-  "GodStone":
-    strokeColor: "#999999"
-    fillColor: "#CCCC99"
-
-
-# Optional per-owner overrides for fieldstyle (lower priority than custstyle) - works for group or user names
-ownerstyle:
-  kingoftheworld:
-    strokecolor: "#C0C0C0"

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Towns-and-Nations-Dynmap-2.Towns_And_Nations_Dynmap.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Towns-and-Nations-Dynmap-2.Towns_And_Nations_Dynmap.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Towns_And_Nations_Dynmap.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Towns_And_Nations_Dynmap.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/org.leralix.Towns_And_Nations_Dynmap.main.iml" filepath="$PROJECT_DIR$/.idea/modules/org.leralix.Towns_And_Nations_Dynmap.main.iml" />
     </modules>
