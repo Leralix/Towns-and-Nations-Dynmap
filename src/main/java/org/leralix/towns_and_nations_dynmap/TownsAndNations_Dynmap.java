@@ -8,6 +8,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.dynmap.DynmapAPI;
 import org.dynmap.markers.*;
+import org.tan.TownsAndNations.Bstats.Metrics;
 import org.tan.TownsAndNations.DataClass.ClaimedChunk;
 import org.tan.TownsAndNations.TownsAndNations;
 import org.tan.TownsAndNations.storage.TownDataStorage;
@@ -18,6 +19,7 @@ import java.util.logging.Logger;
 
 public final class TownsAndNations_Dynmap extends JavaPlugin {
 
+    private final int BSTAT_ID = 20740;
     private static TownsAndNations_Dynmap plugin;
 
     private static final String DEF_INFOWINDOW = "<div class=\"infowindow\"><span style=\"font-size:120%;\">%regionname%</span><br /> Owners <span style=\"font-weight:bold;\">%playerowners%</span><br/>Members <span style=\"font-weight:bold;\">%playermembers%</span><br/>Flags<br /><span style=\"font-weight:bold;\">%flags%</span></div>";
@@ -77,7 +79,7 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
         initialise(dynmapAPI, TanApi);
 
 
-
+        new Metrics(this, BSTAT_ID);
 
 
 
@@ -189,8 +191,6 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
 
     private void Update() {
 
-        System.out.println("Update !");
-
         Map<String,AreaMarker> newmap = new HashMap<>(); /* Build new map */
 
         for(ClaimedChunk chunk : TownsAndNations.getAPI().getChunkList()) {
@@ -227,7 +227,7 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
 
         AreaMarker m = resareas.remove(markerid);
         if(m == null) {
-            m = set.createAreaMarker(markerid, TownDataStorage.get(chunk.getTownID()).getName(), false, Bukkit.getWorlds().get(0).getName(), x, z, false);
+            m = set.createAreaMarker(markerid, TownDataStorage.get(chunk.getTownID()).getName(), false, chunk.getWorldUUID(), x, z, false);
             if(m == null)
                 return;
         }

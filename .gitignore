@@ -26,3 +26,6 @@ replay_pid*
 .gradle
 build/tmp/jar/MANIFEST.MF
 build/tmp/compileJava/previous-compilation-data.bin
+.idea/uiDesigner.xml
+build/tmp/compileJava/compileTransaction/stash-dir/TownsAndNations_Dynmap$Update.class.uniqueId1
+build/tmp/compileJava/compileTransaction/stash-dir/TownsAndNations_Dynmap.class.uniqueId0
