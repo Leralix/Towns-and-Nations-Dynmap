@@ -183,21 +183,11 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
     }
 
     private void Update() {
-
         Map<String,AreaMarker> newmap = new HashMap<>(); /* Build new map */
 
         for(ClaimedChunk chunk : TownsAndNations.getAPI().getChunkList()) {
             handleChunk(chunk, newmap);
         }
-
-
-
-
-        double[] x = new double[] { 1, 10 };
-        double[] z = new double[] { 1, 10 };
-
-
-
 
         /* Now, review old map - anything left is gone */
         for(AreaMarker oldm : resareas.values()) {
@@ -213,14 +203,15 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
 
     private void handleChunk(ClaimedChunk chunk, Map<String, AreaMarker> newmap) {
 
-        String markerid = chunk.getWorldUUID() + "_" + chunk.getX() + "_" + chunk.getZ();
 
+        String markerid = chunk.getWorldUUID() + "_" + chunk.getX() + "_" + chunk.getZ();
+        String worldName = Bukkit.getWorld(UUID.fromString(chunk.getWorldUUID())).getName();
         double[] x = new double[] { chunk.getX()*16, chunk.getX()*16 + 16 };
         double[] z = new double[] { chunk.getZ()*16, chunk.getZ()*16 + 16 };
 
         AreaMarker m = resareas.remove(markerid);
         if(m == null) {
-            m = set.createAreaMarker(markerid, TownDataStorage.get(chunk.getTownID()).getName(), false, chunk.getWorldUUID(), x, z, false);
+            m = set.createAreaMarker(markerid, TownDataStorage.get(chunk.getTownID()).getName(), false, worldName, x, z, false);
             if(m == null)
                 return;
         }
