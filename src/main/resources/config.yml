@@ -5,7 +5,7 @@ update:
   period: 300
 
 layer:
-  name: "townsandnations"
+  name: "Towns and Nations"
   # Make mobs layer hidden by default
   hidebydefault: false
   # ordering priority in layer menu (low goes before high - default is 0)

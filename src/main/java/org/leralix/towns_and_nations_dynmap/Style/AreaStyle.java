@@ -1,4 +1,4 @@
-package org.leralix.towns_and_nations_dynmap;
+package org.leralix.towns_and_nations_dynmap.Style;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -10,7 +10,7 @@ public class AreaStyle {
     double fillopacity;
     String label;
 
-    AreaStyle(FileConfiguration cfg, String path, AreaStyle def) {
+    public AreaStyle(FileConfiguration cfg, String path, AreaStyle def) {
         strokecolor = cfg.getString(path+".strokeColor", def.strokecolor);
         strokeopacity = cfg.getDouble(path+".strokeOpacity", def.strokeopacity);
         strokeweight = cfg.getInt(path+".strokeWeight", def.strokeweight);
@@ -19,7 +19,7 @@ public class AreaStyle {
         label = cfg.getString(path+".label", null);
     }
 
-    AreaStyle(FileConfiguration cfg, String path) {
+    public AreaStyle(FileConfiguration cfg, String path) {
         strokecolor = cfg.getString(path+".strokeColor", "#FF0000");
         strokeopacity = cfg.getDouble(path+".strokeOpacity", 0.8);
         strokeweight = cfg.getInt(path+".strokeWeight", 3);

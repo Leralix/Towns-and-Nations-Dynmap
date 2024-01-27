@@ -8,6 +8,8 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.dynmap.DynmapAPI;
 import org.dynmap.markers.*;
+import org.leralix.towns_and_nations_dynmap.Style.AreaStyle;
+import org.leralix.towns_and_nations_dynmap.commands.CommandManager;
 import org.tan.TownsAndNations.Bstats.Metrics;
 import org.tan.TownsAndNations.DataClass.ClaimedChunk;
 import org.tan.TownsAndNations.TownsAndNations;
@@ -30,7 +32,7 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
     private static MarkerAPI markerAPI;
     private MarkerSet set;
     private boolean reload = false;
-    private Map<String, AreaMarker> resareas = new HashMap<>();
+    private static Map<String, AreaMarker> resareas = new HashMap<>();
     boolean use3d;
     String infowindow;
     int maxdepth;
@@ -54,6 +56,8 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
 
         logger.info("[TaN - Dynmap] -Loading Plugin");
 
+
+
         //get Dynmap
         dynmap = pm.getPlugin("dynmap");
         if (dynmap == null || !dynmap.isEnabled()) {
@@ -64,19 +68,23 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
         //Get T&N
         TaN = pm.getPlugin("TownsAndNations");
         if (TaN == null || !TaN.isEnabled()) {
-            logger.severe("Cannot find Towny, check your logs to see if it enabled properly?!");
+            logger.severe("Cannot find Towns and Nations, check your logs to see if it enabled properly?!");
             return;
         }
 
         DynmapAPI dynmapAPI = (DynmapAPI) dynmap;
         TownsAndNations TanApi = (TownsAndNations) TaN;
 
+        new Metrics(this, BSTAT_ID);
+
+        Objects.requireNonNull(getCommand("tanmap")).setExecutor(new CommandManager());
+
 
 
         initialise(dynmapAPI, TanApi);
 
 
-        new Metrics(this, BSTAT_ID);
+
 
 
 
@@ -114,7 +122,7 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
         if(set == null)
             set = markerAPI.createMarkerSet("preciousstones.markerset", cfg.getString("layer.name", "townsandnations"), null, false);
         else
-            set.setMarkerSetLabel(cfg.getString("layer.name", "PreciousStones"));
+            set.setMarkerSetLabel(cfg.getString("layer.name", "Town and Nations"));
 
         if(set == null) {
             getLogger().severe("Error creating marker set");
@@ -182,16 +190,20 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
         }
     }
 
-    private void Update() {
+    public void Update() {
+
+        /* Remove all chunks colored */
+        for(AreaMarker oldm : resareas.values()) {
+            if(oldm != null)
+                oldm.deleteMarker();
+        }
+        resareas.clear();
+
+
         Map<String,AreaMarker> newmap = new HashMap<>(); /* Build new map */
 
         for(ClaimedChunk chunk : TownsAndNations.getAPI().getChunkList()) {
             handleChunk(chunk, newmap);
-        }
-
-        /* Now, review old map - anything left is gone */
-        for(AreaMarker oldm : resareas.values()) {
-            oldm.deleteMarker();
         }
         /* Replace with new map */
         resareas = newmap;
@@ -220,7 +232,7 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
             m.setLabel(TownDataStorage.get(chunk.getTownID()).getName());   /* Update label */
         }
 
-        newmap.put(markerid, null);
+        newmap.put(markerid, m);
     }
 
 
