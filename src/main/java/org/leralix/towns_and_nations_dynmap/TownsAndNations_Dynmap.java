@@ -79,7 +79,7 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
 
         Objects.requireNonNull(getCommand("tanmap")).setExecutor(new CommandManager());
 
-
+        TanApi.setDynmapAddonLoaded(true);
 
         initialise(dynmapAPI, TanApi);
 
@@ -231,6 +231,10 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
             m.setCornerLocations(x, z); /* Replace corner locations */
             m.setLabel(TownDataStorage.get(chunk.getTownID()).getName());   /* Update label */
         }
+        int color = TownsAndNations.getAPI().getChunkColor(chunk);
+
+        m.setLineStyle(1, 1, color);
+        m.setFillStyle(0.4, color);
 
         newmap.put(markerid, m);
     }
