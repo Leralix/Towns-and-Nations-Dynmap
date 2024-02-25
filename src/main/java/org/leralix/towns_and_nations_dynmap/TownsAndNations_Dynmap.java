@@ -11,7 +11,7 @@ import org.dynmap.markers.*;
 import org.leralix.towns_and_nations_dynmap.Style.AreaStyle;
 import org.leralix.towns_and_nations_dynmap.commands.CommandManager;
 import org.tan.TownsAndNations.Bstats.Metrics;
-import org.tan.TownsAndNations.DataClass.ClaimedChunk;
+import org.tan.TownsAndNations.DataClass.newChunkData.ClaimedChunk2;
 import org.tan.TownsAndNations.TownsAndNations;
 import org.tan.TownsAndNations.storage.TownDataStorage;
 
@@ -23,12 +23,9 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
 
     private final int BSTAT_ID = 20740;
     private static TownsAndNations_Dynmap plugin;
-
     private static final String DEF_INFOWINDOW = "<div class=\"infowindow\"><span style=\"font-size:120%;\">%regionname%</span><br /> Owners <span style=\"font-weight:bold;\">%playerowners%</span><br/>Members <span style=\"font-weight:bold;\">%playermembers%</span><br/>Flags<br /><span style=\"font-weight:bold;\">%flags%</span></div>";
-
     Logger logger = this.getLogger();
     PluginManager pm = getServer().getPluginManager();
-
     private static MarkerAPI markerAPI;
     private MarkerSet set;
     private boolean reload = false;
@@ -52,11 +49,7 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
         Plugin dynmap;
         Plugin TaN;
 
-
-
         logger.info("[TaN - Dynmap] -Loading Plugin");
-
-
 
         //get Dynmap
         dynmap = pm.getPlugin("dynmap");
@@ -82,16 +75,6 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
         TanApi.setDynmapAddonLoaded(true);
 
         initialise(dynmapAPI, TanApi);
-
-
-
-
-
-
-
-
-
-
     }
 
     private void initialise(DynmapAPI dynmapAPI, TownsAndNations TanApi) {
@@ -115,7 +98,7 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
         }
 
         FileConfiguration cfg = getConfig();
-        cfg.options().copyDefaults(true);   /* Load defaults, if needed */
+        cfg.options().copyDefaults(true);
         this.saveConfig();  /* Save updates, if needed */
 
         set = markerAPI.getMarkerSet("townsandnations.markerset");
@@ -202,7 +185,7 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
 
         Map<String,AreaMarker> newmap = new HashMap<>(); /* Build new map */
 
-        for(ClaimedChunk chunk : TownsAndNations.getAPI().getChunkList()) {
+        for(ClaimedChunk2 chunk : TownsAndNations.getAPI().getChunkList()) {
             handleChunk(chunk, newmap);
         }
         /* Replace with new map */
@@ -213,7 +196,7 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
 
     }
 
-    private void handleChunk(ClaimedChunk chunk, Map<String, AreaMarker> newmap) {
+    private void handleChunk(ClaimedChunk2 chunk, Map<String, AreaMarker> newmap) {
 
 
         String markerid = chunk.getWorldUUID() + "_" + chunk.getX() + "_" + chunk.getZ();
@@ -223,13 +206,13 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
 
         AreaMarker m = resareas.remove(markerid);
         if(m == null) {
-            m = set.createAreaMarker(markerid, TownDataStorage.get(chunk.getTownID()).getName(), false, worldName, x, z, false);
+            m = set.createAreaMarker(markerid, chunk.getName(), false, worldName, x, z, false);
             if(m == null)
                 return;
         }
         else {
             m.setCornerLocations(x, z); /* Replace corner locations */
-            m.setLabel(TownDataStorage.get(chunk.getTownID()).getName());   /* Update label */
+            m.setLabel(TownDataStorage.get(chunk.getID()).getName());   /* Update label */
         }
         int color = TownsAndNations.getAPI().getChunkColor(chunk);
 
