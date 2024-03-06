@@ -13,7 +13,7 @@ import org.leralix.towns_and_nations_dynmap.commands.CommandManager;
 import org.tan.TownsAndNations.Bstats.Metrics;
 import org.tan.TownsAndNations.DataClass.newChunkData.ClaimedChunk2;
 import org.tan.TownsAndNations.TownsAndNations;
-import org.tan.TownsAndNations.storage.TownDataStorage;
+import org.tan.TownsAndNations.storage.DataStorage.TownDataStorage;
 
 import java.util.*;
 import java.util.logging.Logger;

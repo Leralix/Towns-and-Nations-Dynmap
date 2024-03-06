@@ -27,7 +27,7 @@ repositories {
 dependencies {
     compileOnly "org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT"
     compileOnly "us.dynmap:dynmap-api:2.5"
-    compileOnly name: 'Towns_and_Nations-0.5.4' // Ajoute le plugin comme dépendance
+    compileOnly name: 'Towns_and_Nations-0.6.0'
 }
 
 def targetJavaVersion = 17
