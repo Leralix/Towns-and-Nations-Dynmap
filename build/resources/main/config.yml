@@ -5,16 +5,15 @@ update:
   period: 300
 
 layer:
+  # Name of the layer
   name: "Towns and Nations"
-  # Make mobs layer hidden by default
-  hidebydefault: false
+  # Make the layer hidden by default
+  hide_by_default: false
   # ordering priority in layer menu (low goes before high - default is 0)
-  layerprio: 0
+  layer_priority: 0
   # (optional) set minimum zoom level before layer is visible (0 = default, always visible)
-  minzoom: 0
+  minimum_zoom: 0
 
-# Set true to show 3D volumes for fields
-use3dfields: false
 
 # Format for popup - substitute values for macros: use %<flagname>% for value of specific flag
 infowindow: '<div class=\"infowindow\"><span style=\"font-size:120%;">%regionname%</span><br /> Owners <span style="font-weight:bold;">%playerowners%</span><br/>Members <span style="font-weight:bold;">%playermembers%</span><br/>Flags<br /><span style="font-weight:bold;">%flags%</span></div>'
