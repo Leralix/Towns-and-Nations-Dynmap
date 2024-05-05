@@ -39,6 +39,9 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
+        //reloadConfig();
+        //saveConfig();
         // Plugin startup logic
         plugin = this;
 
@@ -62,6 +65,7 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
 
         DynmapAPI dynmapAPI = (DynmapAPI) dynmap;
         TownsAndNations TanApi = (TownsAndNations) TaN;
+
 
 
         Objects.requireNonNull(getCommand("tanmap")).setExecutor(new CommandManager());
@@ -128,16 +132,12 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
     }
 
     public void Update() {
-
-        /* Remove all chunks colored */
         chunkManager.clear();
 
-        /* Add all chunks colored */
         for(ClaimedChunk2 chunk : TownsAndNations.getAPI().getChunkList()) {
             chunkManager.add(chunk);
         }
 
-        /* And schedule next update */
         getServer().getScheduler().scheduleSyncDelayedTask(this, new Update(), update_period);
 
     }

@@ -30,16 +30,16 @@ public class ChunkManager {
         double[] z = new double[] { claimedChunk.getZ()*16, claimedChunk.getZ()*16 + 16 };
         int color = TownsAndNations.getAPI().getChunkColor(claimedChunk);
 
-        String description = "Name not found";
+        String description = "------------------------";
         if(claimedChunk instanceof TownClaimedChunk townChunk) {
             description = TownDescriptionStorage.get(townChunk.getOwnerID()).getChunkDescription();
         }
         else if (claimedChunk instanceof RegionClaimedChunk regionClaimedChunk) {
-            description = regionClaimedChunk.getName();
+            description = RegionDescriptionStorage.get(regionClaimedChunk.getOwnerID()).getChunkDescription();
         }
 
 
-        AreaMarker areamarker = set.createAreaMarker(markerID, "Description not found", false, worldName, x, z, false);
+        AreaMarker areamarker = set.createAreaMarker(markerID, "------------------------", false, worldName, x, z, false);
         areamarker.setLineStyle(1, 1, color);
         areamarker.setFillStyle(0.4, color);
         areamarker.setDescription(description);

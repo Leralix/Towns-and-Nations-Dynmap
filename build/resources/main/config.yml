@@ -18,21 +18,21 @@ layer:
 # Format for popup - substitute values for macros: use %<flagname>% for value of specific flag
 town_infowindow:
   start: '<div class="infowindow">'
-  town_name: '<span style="font-size:140%;font-weight:bold;">%TOWN_NAME%</span>  <span style="font-size:80%">Créé il y a %DAYS_SINCE_CREATION% jour(s)</span><br><br>'
-  town_description: '<span style="font-size:100%;font-style:italic;">%TOWN_DESCRIPTION%</span><br>'
-  town_data: '<hr><span style="font-size:100%;"><b>Claims</b> %NUMBER_CLAIMS% <b>|</b> <b>Niveau</b> %TOWN_LEVEL% </span><hr><br>'
-  town_region: '<span style="font-weight:bold;">Région:</span><br>%REGION_NAME%<br><br>'
-  town_leader: '<span style="font-weight:bold;">Leader de la ville</span><br>%TOWN_LEADER%<br><br>'
-  town_members: '<span style="font-weight:bold;">Membres</span><br>%MEMBERS_LIST%<br>'
+  name: '<span style="font-size:140%;font-weight:bold;">%TOWN_NAME%</span>  <span style="font-size:80%">Créé il y a %DAYS_SINCE_CREATION% jour(s)</span><br><br>'
+  description: '<span style="font-size:100%;font-style:italic;">%TOWN_DESCRIPTION%</span><br>'
+  data: '<hr><span style="font-size:100%;"><b>Claims</b> %NUMBER_CLAIMS% <b>|</b> <b>Niveau</b> %TOWN_LEVEL% </span><hr><br>'
+  region: '<span style="font-weight:bold;">Région:</span><br>%REGION_NAME%<br><br>'
+  leader: '<span style="font-weight:bold;">Leader de la ville</span><br>%TOWN_LEADER%<br><br>'
+  members: '<span style="font-weight:bold;">Membres</span><br>%MEMBERS_LIST%<br>'
   end: '</div>'
 
-infowindow:
+region_infowindow:
   start: '<div class="infowindow">'
-  region_name: '<span style="font-size:140%;font-weight:bold;">%REGION_NAME%</span>  <span style="font-size:80%">Créé il y a %DAYS_SINCE_CREATION% jour(s)</span><br><br>'
-  region_description: '<span style="font-size:100%;font-style:italic;">%TOWN_DESCRIPTION%</span><br>'
-  region_data: '<hr><span style="font-size:100%;"><b>Claims</b> %NUMBER_CLAIMS% <b>|</b> <b>Niveau</b> %TOWN_LEVEL% </span><hr><br>'
-  region_leader: '<span style="font-weight:bold;">Leader de la ville</span><br>%TOWN_LEADER%<br><br>'
-  region_members: '<span style="font-weight:bold;">Membres</span><br>%MEMBERS_LIST%<br>'
+  name: '<span style="font-size:140%;font-weight:bold;">%REGION_NAME%</span>  <span style="font-size:80%">Créé il y a %DAYS_SINCE_CREATION% jour(s)</span><br><br>'
+  description: '<span style="font-size:100%;font-style:italic;">%REGION_DESCRIPTION%</span><br>'
+  data: '<hr><span style="font-size:100%;"><b>Claims</b> %NUMBER_CLAIMS% <b>|</b> <b>Nombre de villes</b> %NUMBER_OF_TOWNS% </span><hr><br>'
+  capital: '<span style="font-weight:bold;">Capitale régionale</span><br>%REGION_CAPITAL%<br><br>'
+  cities: '<span style="font-weight:bold;">Villes</span><br>%TOWN_LIST%<br>'
   end: '</div>'
 
 fieldstyle:
