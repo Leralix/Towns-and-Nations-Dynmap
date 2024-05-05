@@ -1,6 +1,5 @@
 package org.leralix.towns_and_nations_dynmap;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -9,17 +8,19 @@ import org.dynmap.DynmapAPI;
 import org.dynmap.markers.AreaMarker;
 import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
-import org.leralix.towns_and_nations_dynmap.Storage.ChunkManager;
+import org.leralix.towns_and_nations_dynmap.Storage.*;
 import org.leralix.towns_and_nations_dynmap.commands.CommandManager;
 import org.tan.TownsAndNations.Bstats.Metrics;
+import org.tan.TownsAndNations.DataClass.RegionData;
+import org.tan.TownsAndNations.DataClass.TownData;
 import org.tan.TownsAndNations.DataClass.newChunkData.ClaimedChunk2;
 import org.tan.TownsAndNations.TownsAndNations;
+import org.tan.TownsAndNations.storage.DataStorage.RegionDataStorage;
 import org.tan.TownsAndNations.storage.DataStorage.TownDataStorage;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 
@@ -27,14 +28,12 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
 
     private final int BSTAT_ID = 20740;
     private static TownsAndNations_Dynmap plugin;
-    private static final String DEF_INFOWINDOW = "<div class=\"infowindow\"><span style=\"font-size:120%;\">%regionname%</span><br /> Owners <span style=\"font-weight:bold;\">%playerowners%</span><br/>Members <span style=\"font-weight:bold;\">%playermembers%</span><br/>Flags<br /><span style=\"font-weight:bold;\">%flags%</span></div>";
     Logger logger = this.getLogger();
     PluginManager pm = getServer().getPluginManager();
     private static MarkerAPI markerAPI;
     private MarkerSet set;
     private boolean reload = false;
     private static Map<String, AreaMarker> resareas = new HashMap<>();
-    String infowindow;
     long update_period;
     ChunkManager chunkManager;
 
@@ -78,18 +77,6 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
             return;
         }
 
-        /* Load configuration */
-        if(reload) {
-            reloadConfig();
-            if(set != null) {
-                set.deleteMarkerSet();
-                set = null;
-            }
-            resareas.clear();
-        }
-        else {
-            reload = true;
-        }
 
         FileConfiguration cfg = getConfig();
         cfg.options().copyDefaults(true);
@@ -108,9 +95,10 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
 
         set.setLayerPriority(cfg.getInt("layer.layer_priority", 10));
         set.setHideByDefault(cfg.getBoolean("layer.hide_by_default", false));
-        infowindow = cfg.getString("infowindow", DEF_INFOWINDOW);
 
-
+        for (AreaMarker areaMarker : set.getAreaMarkers()){
+            areaMarker.deleteMarker();
+        }
 
 
         /* Set up update job - based on periond */
@@ -120,9 +108,17 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
 
         chunkManager = new ChunkManager(set);
 
+        for(TownData townData : TownDataStorage.getTownMap().values()){
+            TownDescription townDescription = new TownDescription(townData);
+            TownDescriptionStorage.add(townDescription);
+        }
+
+        for(RegionData regionData : RegionDataStorage.getAllRegions()){
+            RegionDescription regionDescription = new RegionDescription(regionData);
+            RegionDescriptionStorage.add(regionDescription);
+        }
+
         getServer().getScheduler().scheduleSyncDelayedTask(this, new Update(), 40);   /* First time is 2 seconds */
-
-
     }
 
     private class Update implements Runnable {
@@ -134,56 +130,17 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
     public void Update() {
 
         /* Remove all chunks colored */
-        /*
-        for(AreaMarker oldm : resareas.values()) {
-            if(oldm != null)
-                oldm.deleteMarker();
-        }
-        resareas.clear();
-        */
         chunkManager.clear();
 
-        //Map<String,AreaMarker> newmap = new HashMap<>(); /* Build new map */
-
-
+        /* Add all chunks colored */
         for(ClaimedChunk2 chunk : TownsAndNations.getAPI().getChunkList()) {
             chunkManager.add(chunk);
-            //handleChunk(chunk, newmap);
         }
-        /* Replace with new map */
-        //resareas = newmap;
 
         /* And schedule next update */
         getServer().getScheduler().scheduleSyncDelayedTask(this, new Update(), update_period);
 
     }
-
-    private void handleChunk(ClaimedChunk2 chunk, Map<String, AreaMarker> newmap) {
-
-
-        String markerID = chunk.getWorldUUID() + "_" + chunk.getX() + "_" + chunk.getZ();
-        String worldName = Bukkit.getWorld(UUID.fromString(chunk.getWorldUUID())).getName();
-        double[] x = new double[] { chunk.getX()*16, chunk.getX()*16 + 16 };
-        double[] z = new double[] { chunk.getZ()*16, chunk.getZ()*16 + 16 };
-
-        AreaMarker m = resareas.remove(markerID);
-        if(m == null) {
-            m = set.createAreaMarker(markerID, chunk.getName() + "test", false, worldName, x, z, false);
-            if(m == null)
-                return;
-        }
-        else {
-            m.setCornerLocations(x, z); /* Replace corner locations */
-            m.setLabel(TownDataStorage.get(markerID).getName());   /* Update label */
-        }
-        int color = TownsAndNations.getAPI().getChunkColor(chunk);
-
-        m.setLineStyle(1, 1, color);
-        m.setFillStyle(0.4, color);
-
-        newmap.put(markerID, m);
-    }
-
 
     @Override
     public void onDisable() {
