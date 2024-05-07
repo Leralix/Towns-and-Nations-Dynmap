@@ -7,10 +7,7 @@ import org.tan.TownsAndNations.storage.DataStorage.RegionDataStorage;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class TownDescription {
 
@@ -102,53 +99,24 @@ public class TownDescription {
     }
 
     public String getChunkDescription(){
-        StringBuilder description = new StringBuilder();
+        String description = TownsAndNations_Dynmap.getPlugin().getConfig().getString("town_infowindow", "Config not found - town");
 
-        String start = TownsAndNations_Dynmap.getPlugin().getConfig().getString("town_infowindow.start", "Config not found");
-        description.append(start);
-
-        //Add the town name
-        String townName = TownsAndNations_Dynmap.getPlugin().getConfig().getString("town_infowindow.name", "Config not found");
-        townName  = townName.replace("%TOWN_NAME%", this.name);
-        townName  = townName.replace("%DAYS_SINCE_CREATION%", String.valueOf(this.daysSinceCreation));
-        description.append(townName);
-
-        //Add the town description
-        String townDescription = TownsAndNations_Dynmap.getPlugin().getConfig().getString("town_infowindow.description", "Config not found");
-        townDescription  = townDescription.replace("%TOWN_DESCRIPTION%", this.description);
-        description.append(townDescription);
-
-        //Add the datas
-        String townData = TownsAndNations_Dynmap.getPlugin().getConfig().getString("town_infowindow.data", "Config not found");
-        townData  = townData.replace("%NUMBER_CLAIMS%", String.valueOf(this.numberOfClaims));
-        townData  = townData.replace("%TOWN_LEVEL%", String.valueOf(this.townLevel));
-        description.append(townData);
-
-        //Add region name if town have one
-        if(regionName != null){
-            String region = TownsAndNations_Dynmap.getPlugin().getConfig().getString("town_infowindow.region", "Config not found");
-            region  = region.replace("%REGION_NAME%", regionName);
-            description.append(region);
-        }
-
-        //Town leader
-        String townLeader = TownsAndNations_Dynmap.getPlugin().getConfig().getString("town_infowindow.leader", "Config not found");
-        townLeader  = townLeader.replace("%TOWN_LEADER%", ownerName);
-        description.append(townLeader);
+        description = description.replace("%TOWN_NAME%", this.name);
+        description = description.replace("%DAYS_SINCE_CREATION%", String.valueOf(this.daysSinceCreation));
+        description = description.replace("%DESCRIPTION%", this.description);
+        description = description.replace("%NUMBER_CLAIMS%", String.valueOf(this.numberOfClaims));
+        description = description.replace("%TOWN_LEVEL%", String.valueOf(this.townLevel));
+        description = description.replace("%REGION_NAME%", Objects.requireNonNullElse(regionName, "No region"));
+        description = description.replace("%TOWN_LEADER%", ownerName);
 
         //Member list
-        String membersList = TownsAndNations_Dynmap.getPlugin().getConfig().getString("town_infowindow.members", "Config not found");
         StringBuilder memberList = new StringBuilder();
         for(String member : getMembersName()){
             memberList.append(member).append(", ");
         }
-        membersList  = membersList.replace("%MEMBERS_LIST%", memberList);
-        description.append(membersList);
+        description  = description.replace("%MEMBERS_LIST%", memberList);
 
-        String end = TownsAndNations_Dynmap.getPlugin().getConfig().getString("town_infowindow.end", "Config not found");
-        description.append(end);
-
-        return description.toString();
+        return description;
     }
 
 

@@ -71,45 +71,24 @@ public class RegionDescription {
 
 
     public String getChunkDescription(){
-        StringBuilder description = new StringBuilder();
 
-        String start = TownsAndNations_Dynmap.getPlugin().getConfig().getString("region_infowindow.start", "Config not found - region - ");
-        description.append(start);
+        String description = TownsAndNations_Dynmap.getPlugin().getConfig().getString("region_infowindow", "Config not found - region");
 
-        //Add the town name
-        String townName = TownsAndNations_Dynmap.getPlugin().getConfig().getString("region_infowindow.name", "Config not found");
-        townName  = townName.replace("%REGION_NAME%", this.name);
-        townName  = townName.replace("%DAYS_SINCE_CREATION%", String.valueOf(this.daysSinceCreation));
-        description.append(townName);
+        description = description.replace("%REGION_NAME%", this.name);
+        description =  description.replace("%DAYS_SINCE_CREATION%", String.valueOf(this.daysSinceCreation));
+        description  = description.replace("%DESCRIPTION%", this.description);
+        description  = description.replace("%NUMBER_CLAIMS%", String.valueOf(this.numberOfClaims));
+        description  = description.replace("%NUMBER_OF_TOWNS%", String.valueOf(this.numberOfTowns));
 
-        //Add the town description
-        String townDescription = TownsAndNations_Dynmap.getPlugin().getConfig().getString("region_infowindow.description", "Config not found");
-        townDescription  = townDescription.replace("%REGION_DESCRIPTION%", this.description);
-        description.append(townDescription);
+        description  = description.replace("%REGION_CAPITAL%", capitalName);
 
-        //Add the datas
-        String townData = TownsAndNations_Dynmap.getPlugin().getConfig().getString("region_infowindow.data", "Config not found");
-        townData  = townData.replace("%NUMBER_CLAIMS%", String.valueOf(this.numberOfClaims));
-        townData  = townData.replace("%NUMBER_OF_TOWNS%", String.valueOf(this.numberOfTowns));
-        description.append(townData);
-
-
-
-        //Town leader
-        String townLeader = TownsAndNations_Dynmap.getPlugin().getConfig().getString("region_infowindow.capital", "Config not found");
-        townLeader  = townLeader.replace("%REGION_CAPITAL%", capitalName);
-        description.append(townLeader);
-
-        //Member list
-        String townList = TownsAndNations_Dynmap.getPlugin().getConfig().getString("region_infowindow.cities", "Config not found");
         StringBuilder memberList = new StringBuilder();
         for(String member : townListName){
             memberList.append(member).append(", ");
         }
-        townList  = townList.replace("%TOWN_LIST%", memberList);
-        description.append(townList);
+        description  = description.replace("%TOWN_LIST%", memberList);
 
-        return description.toString();
+        return description;
     }
 
 

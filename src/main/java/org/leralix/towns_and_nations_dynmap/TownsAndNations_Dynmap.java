@@ -9,6 +9,7 @@ import org.dynmap.markers.AreaMarker;
 import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
 import org.leralix.towns_and_nations_dynmap.Storage.*;
+import org.leralix.towns_and_nations_dynmap.Style.ChunkStyle;
 import org.leralix.towns_and_nations_dynmap.commands.CommandManager;
 import org.tan.TownsAndNations.Bstats.Metrics;
 import org.tan.TownsAndNations.DataClass.RegionData;
@@ -36,6 +37,7 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
     private static Map<String, AreaMarker> resareas = new HashMap<>();
     long update_period;
     ChunkManager chunkManager;
+
 
     @Override
     public void onEnable() {
@@ -80,8 +82,6 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
             getLogger().severe("Error loading dynmap marker API!");
             return;
         }
-
-
         FileConfiguration cfg = getConfig();
         cfg.options().copyDefaults(true);
         this.saveConfig();

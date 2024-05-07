@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.dynmap.markers.AreaMarker;
 import org.dynmap.markers.MarkerSet;
+import org.leralix.towns_and_nations_dynmap.Style.ChunkStyle;
 import org.tan.TownsAndNations.DataClass.newChunkData.ClaimedChunk2;
 import org.tan.TownsAndNations.DataClass.newChunkData.RegionClaimedChunk;
 import org.tan.TownsAndNations.DataClass.newChunkData.TownClaimedChunk;
@@ -17,9 +18,14 @@ public class ChunkManager {
 
     private final Map<String, AreaMarker> AreaMap = new HashMap<>();
     private final MarkerSet set;
+    private final ChunkStyle townChunkStyle;
+    private final ChunkStyle regionChunkStyle;
 
     public ChunkManager(MarkerSet set) {
         this.set = set;
+
+        this.townChunkStyle = new ChunkStyle(TownsAndNations.getPlugin().getConfig(), "town_fieldStyle");
+        this.regionChunkStyle = new ChunkStyle(TownsAndNations.getPlugin().getConfig(), "region_fieldStyle");
     }
 
     public void add(ClaimedChunk2 claimedChunk) {
@@ -30,19 +36,33 @@ public class ChunkManager {
         double[] z = new double[] { claimedChunk.getZ()*16, claimedChunk.getZ()*16 + 16 };
         int color = TownsAndNations.getAPI().getChunkColor(claimedChunk);
 
-        String description = "------------------------";
-        if(claimedChunk instanceof TownClaimedChunk townChunk) {
-            description = TownDescriptionStorage.get(townChunk.getOwnerID()).getChunkDescription();
-        }
-        else if (claimedChunk instanceof RegionClaimedChunk regionClaimedChunk) {
-            description = RegionDescriptionStorage.get(regionClaimedChunk.getOwnerID()).getChunkDescription();
-        }
-
 
         AreaMarker areamarker = set.createAreaMarker(markerID, "------------------------", false, worldName, x, z, false);
-        areamarker.setLineStyle(1, 1, color);
-        areamarker.setFillStyle(0.4, color);
-        areamarker.setDescription(description);
+
+
+        if(claimedChunk instanceof TownClaimedChunk townChunk) {
+            String description = TownDescriptionStorage.get(townChunk.getOwnerID()).getChunkDescription();
+            areamarker.setDescription(description);
+
+            int strokeWeight = townChunkStyle.getBaseStrokeWeight();
+            double strokeOpacity = townChunkStyle.getStrokeOpacity();
+            double fillOpacity = townChunkStyle.getFillOpacity();
+
+            areamarker.setLineStyle(strokeWeight, strokeOpacity, color);
+            areamarker.setFillStyle(fillOpacity, color);
+        }
+        else if (claimedChunk instanceof RegionClaimedChunk regionClaimedChunk) {
+            String description = RegionDescriptionStorage.get(regionClaimedChunk.getOwnerID()).getChunkDescription();
+
+            int strokeWeight = townChunkStyle.getBaseStrokeWeight();
+            double strokeOpacity = townChunkStyle.getStrokeOpacity();
+            double fillOpacity = townChunkStyle.getFillOpacity();
+
+            areamarker.setDescription(description);
+            areamarker.setLineStyle(strokeWeight, strokeOpacity, color);
+            areamarker.setFillStyle(fillOpacity, color);
+        }
+
 
 
         AreaMap.put(markerID, areamarker);
