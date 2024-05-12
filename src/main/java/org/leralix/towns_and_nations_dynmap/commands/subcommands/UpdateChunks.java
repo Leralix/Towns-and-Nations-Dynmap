@@ -27,9 +27,12 @@ public class UpdateChunks extends SubCommand {
     }
     @Override
     public void perform(Player player, String[] args){
-        TownsAndNations_Dynmap.getPlugin().Update();
+        try {
+            TownsAndNations_Dynmap.getPlugin().Update();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         player.sendMessage("Dynmap updated");
-
     }
 
 }

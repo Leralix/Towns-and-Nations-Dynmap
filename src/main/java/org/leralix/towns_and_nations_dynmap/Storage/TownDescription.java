@@ -30,17 +30,11 @@ public class TownDescription {
         String name = townData.getName();
 
 
-        int nbDays = 0;
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
-            sdf.setLenient(true);
-            Date date = sdf.parse(townData.getDateCreated());
-            Date today = new Date();
-            long difference = today.getTime() - date.getTime();
-            nbDays = (int) difference / (1000 * 60 * 60 * 24);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        Date today = new Date();
+        Date creationDate = new Date(townData.getDateTimeCreated());
+
+        long diffInDays = today.getTime() - creationDate.getTime();
+        int nbDays = (int) (diffInDays / (1000 * 60 * 60 * 24));
 
 
         int numberOfChunks = townData.getNumberOfClaimedChunk();

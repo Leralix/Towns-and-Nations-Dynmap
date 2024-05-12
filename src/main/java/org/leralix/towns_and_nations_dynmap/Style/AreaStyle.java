@@ -2,14 +2,14 @@ package org.leralix.towns_and_nations_dynmap.Style;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-public class ChunkStyle {
+public class AreaStyle {
     String baseStrokeColor;
     double strokeOpacity;
     int baseStrokeWeight;
     String fillColor;
     double fillOpacity;
 
-    public ChunkStyle(FileConfiguration cfg, String path) {
+    public AreaStyle(FileConfiguration cfg, String path) {
         baseStrokeColor = cfg.getString(path+".strokeColor", "#FF0000");
         strokeOpacity = cfg.getDouble(path+".strokeOpacity", 0.8);
         baseStrokeWeight = cfg.getInt(path+".strokeWeight", 3);

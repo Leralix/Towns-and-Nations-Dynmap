@@ -6,6 +6,7 @@ import org.tan.TownsAndNations.DataClass.TownData;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,18 +31,11 @@ public class RegionDescription {
         String name = regionData.getName();
 
 
-        int nbDays = 0;
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
-            sdf.setLenient(true);
-            Date date = sdf.parse(regionData.getDateCreated());
-            Date today = new Date();
-            long difference = today.getTime() - date.getTime();
-            nbDays = (int) difference / (1000 * 60 * 60 * 24);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        Date today = new Date();
+        Date creationDate = new Date(regionData.getDateTimeCreated());
 
+        long diffInDays = today.getTime() - creationDate.getTime();
+        int nbDays = (int) (diffInDays / (1000 * 60 * 60 * 24));
 
         int numberOfChunks = regionData.getNumberOfClaimedChunk();
         int nbTowns = regionData.getNumberOfTownsIn();
