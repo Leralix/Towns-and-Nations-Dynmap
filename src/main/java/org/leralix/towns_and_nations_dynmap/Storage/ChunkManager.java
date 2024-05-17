@@ -29,7 +29,6 @@ public class ChunkManager {
     private Map<String, Marker> existingMarkers = plugin.getMarkers();
 
 
-
     enum direction {XPLUS, ZPLUS, XMINUS, ZMINUS};
 
     public ChunkManager(MarkerSet set) {

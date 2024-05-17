@@ -38,6 +38,9 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
     ChunkManager chunkManager;
     private final Map<String, AreaMarker> areaMarkers = new HashMap<>();
     private final Map<String, Marker> markers = new HashMap<>();
+    Map<String, AreaMarker> newmap = new HashMap<>(); /* Build new map */
+    Map<String, Marker> newmark = new HashMap<>(); /* Build new map */
+
 
     @Override
     public void onEnable() {
@@ -124,6 +127,10 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
             RegionDescriptionStorage.add(regionDescription);
         }
 
+        //Need to create a parent object for towns and regions
+        Map<String, AreaMarker> newmap = new HashMap<>(); /* Build new map */
+        Map<String, Marker> newmark = new HashMap<>(); /* Build new map */
+
         getServer().getScheduler().scheduleSyncDelayedTask(this, new Update(), 40);   /* First time is 2 seconds */
     }
 
@@ -138,9 +145,14 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
     }
 
     public void Update() throws Exception {
-        //Need to create a parent object for towns and regions
-        Map<String, AreaMarker> newmap = new HashMap<>(); /* Build new map */
-        Map<String, Marker> newmark = new HashMap<>(); /* Build new map */
+
+        //Reset old markers
+        for (AreaMarker areaMarker : newmap.values()){
+            areaMarker.deleteMarker();
+        }
+        for (Marker marker : newmark.values()){
+            marker.deleteMarker();
+        }
 
         for(TownData townData : TownDataStorage.getTownMap().values()){
             chunkManager.updateTown(townData, newmap, newmark);
