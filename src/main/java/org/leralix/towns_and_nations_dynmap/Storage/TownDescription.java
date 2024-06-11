@@ -1,6 +1,7 @@
 package org.leralix.towns_and_nations_dynmap.Storage;
 
 import org.leralix.towns_and_nations_dynmap.TownsAndNations_Dynmap;
+import org.tan.TownsAndNations.DataClass.PlayerData;
 import org.tan.TownsAndNations.DataClass.TownData;
 import org.tan.TownsAndNations.storage.DataStorage.PlayerDataStorage;
 import org.tan.TownsAndNations.storage.DataStorage.RegionDataStorage;
@@ -41,7 +42,12 @@ public class TownDescription {
         int townLevel = townData.getTownLevel().getTownLevel();
         int nbPlayer = townData.getPlayerList().size();
         String description = townData.getDescription();
-        String ownerName = townData.getLeaderData().getName();
+        PlayerData owner = townData.getLeaderData();
+        if(owner == null)
+            ownerName = "";
+        else
+            ownerName = owner.getName();
+
         String regionName = null;
         if(townData.haveRegion())
             regionName = RegionDataStorage.get(townData.getRegionID()).getName();

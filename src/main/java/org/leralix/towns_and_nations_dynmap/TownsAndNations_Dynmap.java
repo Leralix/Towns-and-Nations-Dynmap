@@ -127,10 +127,6 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
             RegionDescriptionStorage.add(regionDescription);
         }
 
-        //Need to create a parent object for towns and regions
-        Map<String, AreaMarker> newmap = new HashMap<>(); /* Build new map */
-        Map<String, Marker> newmark = new HashMap<>(); /* Build new map */
-
         getServer().getScheduler().scheduleSyncDelayedTask(this, new Update(), 40);   /* First time is 2 seconds */
     }
 
