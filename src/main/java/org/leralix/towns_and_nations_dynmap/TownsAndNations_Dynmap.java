@@ -6,18 +6,14 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.dynmap.DynmapAPI;
 import org.dynmap.markers.AreaMarker;
-import org.dynmap.markers.Marker;
 import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
-import org.leralix.towns_and_nations_dynmap.Storage.*;
+import org.leralix.towns_and_nations_dynmap.Bstat.Metrics;
+import org.leralix.towns_and_nations_dynmap.Storage.ChunkManager;
+import org.leralix.towns_and_nations_dynmap.Update.UpdateLandMarks;
+import org.leralix.towns_and_nations_dynmap.Update.UpdatePositions;
 import org.leralix.towns_and_nations_dynmap.commands.CommandManager;
-import org.tan.TownsAndNations.Bstats.Metrics;
-import org.tan.TownsAndNations.DataClass.RegionData;
-import org.tan.TownsAndNations.DataClass.TownData;
-import org.tan.TownsAndNations.DataClass.newChunkData.ClaimedChunk2;
 import org.tan.TownsAndNations.TownsAndNations;
-import org.tan.TownsAndNations.storage.DataStorage.RegionDataStorage;
-import org.tan.TownsAndNations.storage.DataStorage.TownDataStorage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,16 +28,13 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
     Logger logger = this.getLogger();
     PluginManager pm = getServer().getPluginManager();
     private static MarkerAPI markerAPI;
-    private MarkerSet set;
-    private final boolean reload = false;
     long update_period;
     ChunkManager chunkManager;
     private final Map<String, AreaMarker> areaMarkers = new HashMap<>();
-    private final Map<String, Marker> markers = new HashMap<>();
-    Map<String, AreaMarker> newmap = new HashMap<>(); /* Build new map */
-    Map<String, Marker> newmark = new HashMap<>(); /* Build new map */
 
 
+    UpdateLandMarks updateLandMarks;
+    UpdatePositions updatePositions;
     @Override
     public void onEnable() {
         saveDefaultConfig();
@@ -69,8 +62,6 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
         TownsAndNations.setDynmapAddonLoaded(true);
 
         DynmapAPI dynmapAPI = (DynmapAPI) dynmap;
-        TownsAndNations TanApi = (TownsAndNations) TaN;
-
 
 
         Objects.requireNonNull(getCommand("tanmap")).setExecutor(new CommandManager());
@@ -83,19 +74,27 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
     private void initialise(DynmapAPI dynmapAPI) {
         markerAPI = dynmapAPI.getMarkerAPI();
 
-        if(markerAPI == null) {
+        if (markerAPI == null) {
             getLogger().severe("Error loading dynmap marker API!");
             return;
         }
+
+        initialiseClaimedChunks(markerAPI);
+        initialiseLandmarks(markerAPI);
+    }
+
+    private void initialiseClaimedChunks(MarkerAPI markerAPI) {
+
+
         FileConfiguration cfg = getConfig();
         cfg.options().copyDefaults(true);
         this.saveConfig();
 
-        set = markerAPI.getMarkerSet("townsandnations.markerset");
+        MarkerSet set = markerAPI.getMarkerSet("townsandnations.markerset");
         if(set == null)
             set = markerAPI.createMarkerSet("townsandnations.markerset", cfg.getString("layer.name", "Towns and Nations"), null, false);
         else
-            set.setMarkerSetLabel(cfg.getString("layer.name", "Town and Nations"));
+            set.setMarkerSetLabel(cfg.getString("layer.name", "Towns and Nations"));
 
 
         int minZoom = cfg.getInt("layer.minimum_zoom", 0);
@@ -116,58 +115,39 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
         update_period = per* 20L;
 
         chunkManager = new ChunkManager(set);
-
-        for(TownData townData : TownDataStorage.getTownMap().values()){
-            TownDescription townDescription = new TownDescription(townData);
-            TownDescriptionStorage.add(townDescription);
-        }
-
-        for(RegionData regionData : RegionDataStorage.getAllRegions()){
-            RegionDescription regionDescription = new RegionDescription(regionData);
-            RegionDescriptionStorage.add(regionDescription);
-        }
-
-        getServer().getScheduler().scheduleSyncDelayedTask(this, new Update(), 40);   /* First time is 2 seconds */
+        updatePositions = new UpdatePositions(chunkManager, update_period);
+        getServer().getScheduler().scheduleSyncDelayedTask(this, updatePositions, 40);
     }
 
-    private class Update implements Runnable {
-        public void run() {
-            try {
-                Update();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
+    private void initialiseLandmarks(MarkerAPI markerAPI) {
+        FileConfiguration cfg = getConfig();
+        cfg.options().copyDefaults(true);
+        this.saveConfig();
 
-    public void Update() throws Exception {
+        MarkerSet set2 = markerAPI.getMarkerSet("townsandnations.landmarks");
+        if(set2 == null)
+            set2 = markerAPI.createMarkerSet("townsandnations.landmarks", cfg.getString("layer.name", "Landmarks"), null, false);
+        else
+            set2.setMarkerSetLabel(cfg.getString("layer2.name", "Landmarks"));
 
-        //Reset old markers
-        for (AreaMarker areaMarker : newmap.values()){
+        int minZoom = cfg.getInt("layer.minimum_zoom", 0);
+        if(minZoom > 0)
+            set2.setMinZoom(minZoom);
+
+        set2.setLayerPriority(cfg.getInt("layer2.layer_priority", 10));
+        set2.setHideByDefault(cfg.getBoolean("layer2.hide_by_default", false));
+
+        for (AreaMarker areaMarker : set2.getAreaMarkers()){
             areaMarker.deleteMarker();
         }
-        for (Marker marker : newmark.values()){
-            marker.deleteMarker();
-        }
+        int per = cfg.getInt("update.period", 300);
+        if(per < 15) per = 15;
+        update_period = per* 20L;
 
-        for(TownData townData : TownDataStorage.getTownMap().values()){
-            chunkManager.updateTown(townData, newmap, newmark);
-        }
-
-        for(RegionData regionData : RegionDataStorage.getAllRegions()){
-            chunkManager.updateRegion(regionData, newmap, newmark);
-        }
-
-        //Old system
-        //chunkManager.clear();
-
-        //for(ClaimedChunk2 chunk : TownsAndNations.getAPI().getChunkList()) {
-        //    chunkManager.add(chunk);
-        // }
-
-        getServer().getScheduler().scheduleSyncDelayedTask(this, new Update(), update_period);
-
+        updateLandMarks = new UpdateLandMarks(set2, update_period);
+        getServer().getScheduler().scheduleSyncDelayedTask(this, updateLandMarks, 40);
     }
+
 
     @Override
     public void onDisable() {
@@ -178,22 +158,18 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
         return plugin;
     }
 
-    public Logger getPluginLogger() {
-        return plugin.getLogger();
-    }
-
-    public MarkerAPI getMarkerAPI(){
-        return markerAPI;
-    }
-
-    public Map<String, AreaMarker> getAreaMarkers() {
+        public Map<String, AreaMarker> getAreaMarkers() {
         return areaMarkers;
     }
 
-    public Map<String, Marker> getMarkers() {
-        return markers;
+    public void updateDynmap() {
+        updatePositions.update();
+        updateLandMarks.update();
     }
 
+    public static MarkerAPI getMarkerAPI() {
+        return markerAPI;
+    }
 }
 
 

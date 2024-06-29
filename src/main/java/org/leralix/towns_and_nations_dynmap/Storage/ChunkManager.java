@@ -25,8 +25,7 @@ public class ChunkManager {
     private final AreaStyle townAreaStyle;
     private final AreaStyle regionAreaStyle;
     private final TownsAndNations_Dynmap plugin = TownsAndNations_Dynmap.getPlugin();
-    private Map<String, AreaMarker> existingAreaMarkers = plugin.getAreaMarkers();
-    private Map<String, Marker> existingMarkers = plugin.getMarkers();
+    private final Map<String, AreaMarker> existingAreaMarkers = plugin.getAreaMarkers();
 
 
     enum direction {XPLUS, ZPLUS, XMINUS, ZMINUS};
@@ -38,7 +37,7 @@ public class ChunkManager {
         this.regionAreaStyle = new AreaStyle(TownsAndNations.getPlugin().getConfig(), "region_fieldStyle");
     }
 
-    public void updateTown(TownData townData, Map<String, AreaMarker> newWorldNameAreaMarkerMap, Map<String, Marker> newWorldNameMarkerMap) throws Exception {
+    public void updateTown(TownData townData, Map<String, AreaMarker> newWorldNameAreaMarkerMap) {
 
         int poly_index = 0; /* Index of polygon for when a town has multiple shapes. */
 
@@ -55,13 +54,13 @@ public class ChunkManager {
         TileFlags currentShape = null;
 
 
-        for(TownClaimedChunk townClaimedChunk : townClaimedChunks) {
-            if(townClaimedChunk.getWorld() != currentWorld) { /* Not same world */
+        for (TownClaimedChunk townClaimedChunk : townClaimedChunks) {
+            if (townClaimedChunk.getWorld() != currentWorld) {
                 String worldName = townClaimedChunk.getWorld().getName();
-                currentShape = worldNameShapeMap.get(worldName);  /* Find existing */
-                if(currentShape == null) {
+                currentShape = worldNameShapeMap.get(worldName);
+                if (currentShape == null) {
                     currentShape = new TileFlags();
-                    worldNameShapeMap.put(worldName, currentShape);   /* Add fresh one */
+                    worldNameShapeMap.put(worldName, currentShape);
                 }
                 currentWorld = townClaimedChunk.getWorld();
             }
@@ -111,14 +110,18 @@ public class ChunkManager {
             }
             claimedChunksToDraw = townBlockLeftToDraw; /* Replace list (null if no more to process) */
             if(ourShape != null) {
-                poly_index = traceTownOutline(townData, newWorldNameAreaMarkerMap, poly_index, infoWindowPopup, currentWorld.getName(), ourShape, minx, minz);
+                try {
+                    poly_index = traceTownOutline(townData, newWorldNameAreaMarkerMap, poly_index, infoWindowPopup, currentWorld.getName(), ourShape, minx, minz);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 
 
     }
 
-    public void updateRegion(RegionData regionData, Map<String, AreaMarker> newWorldNameAreaMarkerMap, Map<String, Marker> newWorldNameMarkerMap) throws Exception {
+    public void updateRegion(RegionData regionData, Map<String, AreaMarker> newWorldNameAreaMarkerMap) {
 
         int poly_index = 0; /* Index of polygon for when a town has multiple shapes. */
 
@@ -191,7 +194,11 @@ public class ChunkManager {
             }
             claimedChunksToDraw = townBlockLeftToDraw; /* Replace list (null if no more to process) */
             if(ourShape != null) {
-                poly_index = traceTownOutline(regionData, newWorldNameAreaMarkerMap, poly_index, infoWindowPopup, currentWorld.getName(), ourShape, minx, minz);
+                try {
+                    poly_index = traceTownOutline(regionData, newWorldNameAreaMarkerMap, poly_index, infoWindowPopup, currentWorld.getName(), ourShape, minx, minz);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 
@@ -212,21 +219,21 @@ public class ChunkManager {
 
         if(claimedChunk instanceof TownClaimedChunk townChunk) {
             String description = TownDescriptionStorage.get(townChunk.getOwnerID()).getChunkDescription();
-            areamarker.setDescription(description);
 
             int strokeWeight = townAreaStyle.getBaseStrokeWeight();
             double strokeOpacity = townAreaStyle.getStrokeOpacity();
             double fillOpacity = townAreaStyle.getFillOpacity();
 
+            areamarker.setDescription(description);
             areamarker.setLineStyle(strokeWeight, strokeOpacity, color);
             areamarker.setFillStyle(fillOpacity, color);
         }
         else if (claimedChunk instanceof RegionClaimedChunk regionClaimedChunk) {
             String description = RegionDescriptionStorage.get(regionClaimedChunk.getOwnerID()).getChunkDescription();
 
-            int strokeWeight = townAreaStyle.getBaseStrokeWeight();
-            double strokeOpacity = townAreaStyle.getStrokeOpacity();
-            double fillOpacity = townAreaStyle.getFillOpacity();
+            int strokeWeight = regionAreaStyle.getBaseStrokeWeight();
+            double strokeOpacity = regionAreaStyle.getStrokeOpacity();
+            double fillOpacity = regionAreaStyle.getFillOpacity();
 
             areamarker.setDescription(description);
             areamarker.setLineStyle(strokeWeight, strokeOpacity, color);
@@ -236,7 +243,6 @@ public class ChunkManager {
 
 
         AreaMap.put(markerID, areamarker);
-
     }
 
 
@@ -493,14 +499,6 @@ public class ChunkManager {
         return poly_index;
     }
 
-    public void clear() {
-        /* Remove all chunks colored */
-        for(AreaMarker oldArea : AreaMap.values()) {
-            oldArea.deleteMarker();
-        }
-        AreaMap.clear();
-    }
-
     private void addStyle(TownData town, AreaMarker m) {
         AreaStyle as = townAreaStyle;	/* Look up custom style for town, if any */
         AreaStyle ns = regionAreaStyle;	/* Look up nation style, if any */
@@ -512,7 +510,6 @@ public class ChunkManager {
         //m.setBoostFlag(defstyle.getBoost(as, ns));
 
     }
-
     private void addStyle(RegionData region, AreaMarker m) {
         AreaStyle as = townAreaStyle;	/* Look up custom style for region, if any */
         AreaStyle ns = regionAreaStyle;	/* Look up nation style, if any */
