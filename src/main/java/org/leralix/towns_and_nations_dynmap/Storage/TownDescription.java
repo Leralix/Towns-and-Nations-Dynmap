@@ -2,12 +2,11 @@ package org.leralix.towns_and_nations_dynmap.Storage;
 
 import org.leralix.towns_and_nations_dynmap.TownsAndNations_Dynmap;
 import org.tan.TownsAndNations.DataClass.PlayerData;
-import org.tan.TownsAndNations.DataClass.TownData;
+import org.tan.TownsAndNations.DataClass.territoryData.TownData;
 import org.tan.TownsAndNations.storage.DataStorage.PlayerDataStorage;
 import org.tan.TownsAndNations.storage.DataStorage.RegionDataStorage;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+
 import java.util.*;
 
 public class TownDescription {
@@ -40,7 +39,7 @@ public class TownDescription {
 
         int numberOfChunks = townData.getNumberOfClaimedChunk();
         int townLevel = townData.getTownLevel().getTownLevel();
-        int nbPlayer = townData.getPlayerList().size();
+        int nbPlayer = townData.getPlayerIDList().size();
         String description = townData.getDescription();
         PlayerData owner = townData.getLeaderData();
         if(owner == null)
@@ -49,10 +48,10 @@ public class TownDescription {
             ownerName = owner.getName();
 
         String regionName = null;
-        if(townData.haveRegion())
-            regionName = RegionDataStorage.get(townData.getRegionID()).getName();
+        if(townData.haveOverlord())
+            regionName = townData.getOverlord().getName();
         List<String> playersName = new ArrayList<>();
-        for(String playerID : townData.getPlayerList()){
+        for(String playerID : townData.getPlayerIDList()){
             playersName.add(PlayerDataStorage.get(playerID).getName());
         }
 
@@ -64,7 +63,6 @@ public class TownDescription {
         this.numberOfClaims = numberOfChunks;
         this.townLevel = townLevel;
         this.numberOfMembers = nbPlayer;
-        this.ownerName = ownerName;
         this.regionName = regionName;
         this.nationName = name;
         this.membersName = playersName;

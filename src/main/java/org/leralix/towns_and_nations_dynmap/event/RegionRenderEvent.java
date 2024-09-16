@@ -5,8 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.dynmap.markers.AreaMarker;
-import org.tan.TownsAndNations.DataClass.RegionData;
-import org.tan.TownsAndNations.DataClass.TownData;
+import org.tan.TownsAndNations.DataClass.territoryData.RegionData;
 
 public class RegionRenderEvent extends Event {
     private static HandlerList handlers = new HandlerList();

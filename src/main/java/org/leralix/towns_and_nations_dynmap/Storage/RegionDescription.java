@@ -1,16 +1,13 @@
 package org.leralix.towns_and_nations_dynmap.Storage;
 
 import org.leralix.towns_and_nations_dynmap.TownsAndNations_Dynmap;
-import org.tan.TownsAndNations.DataClass.RegionData;
-import org.tan.TownsAndNations.DataClass.TownData;
+import org.tan.TownsAndNations.DataClass.territoryData.ITerritoryData;
+import org.tan.TownsAndNations.DataClass.territoryData.RegionData;
+import org.tan.TownsAndNations.DataClass.territoryData.TownData;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class RegionDescription {
 
@@ -40,9 +37,9 @@ public class RegionDescription {
         int numberOfChunks = regionData.getNumberOfClaimedChunk();
         int nbTowns = regionData.getNumberOfTownsIn();
         String description = regionData.getDescription();
-        String townCaptialName = regionData.getOwner().getTown().getName();
+        String townCaptialName = regionData.getCapital().getName();
         List<String> townNames = new ArrayList<>();
-        for(TownData townData : regionData.getTownsInRegion()){
+        for(ITerritoryData townData : regionData.getSubjects()){
             townNames.add(townData.getName());
         }
 
