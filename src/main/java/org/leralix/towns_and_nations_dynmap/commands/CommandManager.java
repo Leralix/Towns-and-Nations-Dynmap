@@ -2,16 +2,15 @@ package org.leralix.towns_and_nations_dynmap.commands;
 
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
+import org.leralix.tan.storage.stored.PlayerDataStorage;
 import org.leralix.towns_and_nations_dynmap.commands.subcommands.UpdateChunks;
-import org.tan.TownsAndNations.commands.SubCommand;
-import org.tan.TownsAndNations.storage.DataStorage.PlayerDataStorage;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CommandManager implements CommandExecutor, TabExecutor, TabCompleter {
 
-    private final ArrayList<org.tan.TownsAndNations.commands.SubCommand> subCommands = new ArrayList<>();
+    private final ArrayList<SubCommand> subCommands = new ArrayList<>();
 
     public CommandManager(){
         subCommands.add(new UpdateChunks());
@@ -48,13 +47,13 @@ public class CommandManager implements CommandExecutor, TabExecutor, TabComplete
         List<String> suggestions = new ArrayList<>();
 
         if(args.length == 1) {
-            for(org.tan.TownsAndNations.commands.SubCommand subCmd : subCommands) {
+            for(SubCommand subCmd : subCommands) {
                 if(subCmd.getName().startsWith(args[0].toLowerCase())) {
                     suggestions.add(subCmd.getName());
                 }
             }
         }else {
-            org.tan.TownsAndNations.commands.SubCommand subCmd = subCommands.stream().filter(cmd -> cmd.getName().equalsIgnoreCase(args[0])).findFirst().orElse(null);
+            SubCommand subCmd = subCommands.stream().filter(cmd -> cmd.getName().equalsIgnoreCase(args[0])).findFirst().orElse(null);
             if(subCmd != null && sender instanceof Player) {
                 suggestions = subCmd.getTabCompleteSuggestions((Player) sender, args);
             }

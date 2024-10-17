@@ -2,7 +2,7 @@ package org.leralix.towns_and_nations_dynmap.commands.subcommands;
 
 import org.bukkit.entity.Player;
 import org.leralix.towns_and_nations_dynmap.TownsAndNations_Dynmap;
-import org.tan.TownsAndNations.commands.SubCommand;
+import org.leralix.towns_and_nations_dynmap.commands.SubCommand;
 
 import java.util.List;
 public class UpdateChunks extends SubCommand {

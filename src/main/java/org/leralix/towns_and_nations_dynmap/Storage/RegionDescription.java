@@ -1,9 +1,8 @@
 package org.leralix.towns_and_nations_dynmap.Storage;
 
+import org.leralix.tan.dataclass.territory.ITerritoryData;
+import org.leralix.tan.dataclass.territory.RegionData;
 import org.leralix.towns_and_nations_dynmap.TownsAndNations_Dynmap;
-import org.tan.TownsAndNations.DataClass.territoryData.ITerritoryData;
-import org.tan.TownsAndNations.DataClass.territoryData.RegionData;
-import org.tan.TownsAndNations.DataClass.territoryData.TownData;
 
 import java.util.ArrayList;
 import java.util.Date;

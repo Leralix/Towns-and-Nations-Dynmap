@@ -8,12 +8,13 @@ import org.dynmap.DynmapAPI;
 import org.dynmap.markers.AreaMarker;
 import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
+import org.leralix.tan.TownsAndNations;
+import org.leralix.tan.dataclass.PluginVersion;
 import org.leralix.towns_and_nations_dynmap.Bstat.Metrics;
 import org.leralix.towns_and_nations_dynmap.Storage.ChunkManager;
 import org.leralix.towns_and_nations_dynmap.Update.UpdateLandMarks;
 import org.leralix.towns_and_nations_dynmap.Update.UpdatePositions;
 import org.leralix.towns_and_nations_dynmap.commands.CommandManager;
-import org.tan.TownsAndNations.TownsAndNations;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +31,7 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
     private static MarkerAPI markerAPI;
     long update_period;
     ChunkManager chunkManager;
+    PluginVersion pluginVersion = new PluginVersion("0.6.0");
     private final Map<String, AreaMarker> areaMarkers = new HashMap<>();
 
 
@@ -50,6 +52,7 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
         Plugin dynmap = pm.getPlugin("dynmap");
         if (dynmap == null || !dynmap.isEnabled()) {
             logger.severe("Cannot find dynmap, check your logs to see if it enabled properly?!");
+            setEnabled(false);
             return;
         }
 
@@ -57,9 +60,17 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
         Plugin TaN = pm.getPlugin("TownsAndNations");
         if (TaN == null || !TaN.isEnabled()) {
             logger.severe("Cannot find Towns and Nations, check your logs to see if it enabled properly?!");
+            setEnabled(false);
             return;
         }
-        TownsAndNations.setDynmapAddonLoaded(true);
+        PluginVersion minTanVersion = TownsAndNations.getPlugin().getMinimumSupportingDynmap();
+        if(pluginVersion.isOlderThan(minTanVersion)){
+            logger.severe("Towns and Nations is not compatible with this version of Dynmap (minimum version: " + minTanVersion + ")");
+            setEnabled(false);
+            return;
+        }
+
+        TownsAndNations.getPlugin().setDynmapAddonLoaded(true);
 
         DynmapAPI dynmapAPI = (DynmapAPI) dynmap;
 

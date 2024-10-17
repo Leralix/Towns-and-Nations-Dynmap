@@ -4,16 +4,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.dynmap.markers.AreaMarker;
 import org.dynmap.markers.MarkerSet;
+import org.leralix.tan.TownsAndNations;
+import org.leralix.tan.dataclass.chunk.ClaimedChunk2;
+import org.leralix.tan.dataclass.chunk.RegionClaimedChunk;
+import org.leralix.tan.dataclass.chunk.TownClaimedChunk;
+import org.leralix.tan.dataclass.territory.RegionData;
+import org.leralix.tan.dataclass.territory.TownData;
 import org.leralix.towns_and_nations_dynmap.Style.AreaStyle;
 import org.leralix.towns_and_nations_dynmap.TownsAndNations_Dynmap;
 import org.leralix.towns_and_nations_dynmap.event.RegionRenderEvent;
 import org.leralix.towns_and_nations_dynmap.event.TownRenderEvent;
-import org.tan.TownsAndNations.DataClass.newChunkData.ClaimedChunk2;
-import org.tan.TownsAndNations.DataClass.newChunkData.RegionClaimedChunk;
-import org.tan.TownsAndNations.DataClass.newChunkData.TownClaimedChunk;
-import org.tan.TownsAndNations.DataClass.territoryData.RegionData;
-import org.tan.TownsAndNations.DataClass.territoryData.TownData;
-import org.tan.TownsAndNations.TownsAndNations;
 
 import java.util.*;
 
@@ -210,7 +210,7 @@ public class ChunkManager {
         String worldName = Bukkit.getWorld(UUID.fromString(claimedChunk.getWorldUUID())).getName();
         double[] x = new double[] { claimedChunk.getX()*16, claimedChunk.getX()*16 + 16 };
         double[] z = new double[] { claimedChunk.getZ()*16, claimedChunk.getZ()*16 + 16 };
-        int color = TownsAndNations.getAPI().getChunkColor(claimedChunk);
+        int color = TownsAndNations.getPlugin().getAPI().getChunkColor(claimedChunk);
 
 
         AreaMarker areamarker = set.createAreaMarker(markerID, "------------------------", false, worldName, x, z, false);
@@ -502,8 +502,8 @@ public class ChunkManager {
         AreaStyle as = townAreaStyle;	/* Look up custom style for town, if any */
         AreaStyle ns = regionAreaStyle;	/* Look up nation style, if any */
 
-        m.setLineStyle(townAreaStyle.getBaseStrokeWeight(), townAreaStyle.getStrokeOpacity(), town.getChunkColor());
-        m.setFillStyle(townAreaStyle.getFillOpacity(), town.getChunkColor());
+        m.setLineStyle(townAreaStyle.getBaseStrokeWeight(), townAreaStyle.getStrokeOpacity(), town.getChunkColorCode());
+        m.setFillStyle(townAreaStyle.getFillOpacity(), town.getChunkColorCode());
 
         m.setRangeY(16, 16);
         //m.setBoostFlag(defstyle.getBoost(as, ns));
@@ -513,8 +513,8 @@ public class ChunkManager {
         AreaStyle as = townAreaStyle;	/* Look up custom style for region, if any */
         AreaStyle ns = regionAreaStyle;	/* Look up nation style, if any */
 
-        m.setLineStyle(townAreaStyle.getBaseStrokeWeight(), townAreaStyle.getStrokeOpacity(), region.getChunkColor());
-        m.setFillStyle(townAreaStyle.getFillOpacity(), region.getChunkColor());
+        m.setLineStyle(townAreaStyle.getBaseStrokeWeight(), townAreaStyle.getStrokeOpacity(), region.getChunkColorCode());
+        m.setFillStyle(townAreaStyle.getFillOpacity(), region.getChunkColorCode());
 
         m.setRangeY(16, 16);
         //m.setBoostFlag(defstyle.getBoost(as, ns));

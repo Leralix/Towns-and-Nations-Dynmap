@@ -1,10 +1,9 @@
 package org.leralix.towns_and_nations_dynmap.Storage;
 
+import org.bukkit.entity.Player;
+import org.leralix.tan.dataclass.PlayerData;
+import org.leralix.tan.dataclass.territory.TownData;
 import org.leralix.towns_and_nations_dynmap.TownsAndNations_Dynmap;
-import org.tan.TownsAndNations.DataClass.PlayerData;
-import org.tan.TownsAndNations.DataClass.territoryData.TownData;
-import org.tan.TownsAndNations.storage.DataStorage.PlayerDataStorage;
-import org.tan.TownsAndNations.storage.DataStorage.RegionDataStorage;
 
 
 import java.util.*;
@@ -51,8 +50,8 @@ public class TownDescription {
         if(townData.haveOverlord())
             regionName = townData.getOverlord().getName();
         List<String> playersName = new ArrayList<>();
-        for(String playerID : townData.getPlayerIDList()){
-            playersName.add(PlayerDataStorage.get(playerID).getName());
+        for(PlayerData player : townData.getPlayerDataList()){
+            playersName.add(player.getName());
         }
 
 

@@ -5,11 +5,11 @@ import org.bukkit.plugin.Plugin;
 import org.dynmap.markers.Marker;
 import org.dynmap.markers.MarkerIcon;
 import org.dynmap.markers.MarkerSet;
+import org.leralix.tan.dataclass.Landmark;
+import org.leralix.tan.dataclass.Vector3D;
+import org.leralix.tan.storage.stored.LandmarkStorage;
+import org.leralix.tan.storage.stored.TownDataStorage;
 import org.leralix.towns_and_nations_dynmap.TownsAndNations_Dynmap;
-import org.tan.TownsAndNations.DataClass.Landmark;
-import org.tan.TownsAndNations.DataClass.Vector3D;
-import org.tan.TownsAndNations.storage.DataStorage.LandmarkStorage;
-import org.tan.TownsAndNations.storage.DataStorage.TownDataStorage;
 
 import java.util.HashMap;
 import java.util.Map;

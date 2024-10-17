@@ -2,14 +2,13 @@ package org.leralix.towns_and_nations_dynmap.Update;
 
 import org.bukkit.plugin.Plugin;
 import org.dynmap.markers.AreaMarker;
+import org.leralix.tan.dataclass.territory.RegionData;
+import org.leralix.tan.dataclass.territory.TownData;
+import org.leralix.tan.storage.stored.RegionDataStorage;
+import org.leralix.tan.storage.stored.TownDataStorage;
 import org.leralix.towns_and_nations_dynmap.Storage.*;
 import org.leralix.towns_and_nations_dynmap.TownsAndNations_Dynmap;
-import org.tan.TownsAndNations.DataClass.territoryData.RegionData;
-import org.tan.TownsAndNations.DataClass.territoryData.TownData;
-import org.tan.TownsAndNations.storage.DataStorage.RegionDataStorage;
-import org.tan.TownsAndNations.storage.DataStorage.TownDataStorage;
 
-import javax.swing.plaf.synth.Region;
 import java.util.HashMap;
 import java.util.Map;
 

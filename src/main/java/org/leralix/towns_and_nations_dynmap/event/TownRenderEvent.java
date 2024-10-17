@@ -5,7 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.dynmap.markers.AreaMarker;
-import org.tan.TownsAndNations.DataClass.territoryData.TownData;
+import org.leralix.tan.dataclass.territory.TownData;
 
 public class TownRenderEvent extends Event {
     private static HandlerList handlers = new HandlerList();
