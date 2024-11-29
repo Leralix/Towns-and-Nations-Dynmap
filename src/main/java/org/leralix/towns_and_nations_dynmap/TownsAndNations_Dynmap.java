@@ -29,9 +29,9 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
     Logger logger = this.getLogger();
     PluginManager pm = getServer().getPluginManager();
     private static MarkerAPI markerAPI;
-    long update_period;
+    long updatePeriod;
     ChunkManager chunkManager;
-    PluginVersion pluginVersion = new PluginVersion("0.6.0");
+    PluginVersion pluginVersion = new PluginVersion(0,8,0);
     private final Map<String, AreaMarker> areaMarkers = new HashMap<>();
 
 
@@ -123,10 +123,10 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
         /* Set up update job - based on periond */
         int per = cfg.getInt("update.period", 300);
         if(per < 15) per = 15;
-        update_period = per* 20L;
+        updatePeriod = per* 20L;
 
         chunkManager = new ChunkManager(set);
-        updatePositions = new UpdatePositions(chunkManager, update_period);
+        updatePositions = new UpdatePositions(chunkManager, updatePeriod);
         getServer().getScheduler().scheduleSyncDelayedTask(this, updatePositions, 40);
     }
 
@@ -153,9 +153,9 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
         }
         int per = cfg.getInt("update.period", 300);
         if(per < 15) per = 15;
-        update_period = per* 20L;
+        updatePeriod = per* 20L;
 
-        updateLandMarks = new UpdateLandMarks(set2, update_period);
+        updateLandMarks = new UpdateLandMarks(set2, updatePeriod);
         getServer().getScheduler().scheduleSyncDelayedTask(this, updateLandMarks, 40);
     }
 

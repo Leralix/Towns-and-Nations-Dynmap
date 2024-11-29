@@ -1,7 +1,7 @@
 package org.leralix.towns_and_nations_dynmap.Storage;
 
-import org.leralix.tan.dataclass.territory.ITerritoryData;
 import org.leralix.tan.dataclass.territory.RegionData;
+import org.leralix.tan.dataclass.territory.TerritoryData;
 import org.leralix.towns_and_nations_dynmap.TownsAndNations_Dynmap;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class RegionDescription {
         String description = regionData.getDescription();
         String townCaptialName = regionData.getCapital().getName();
         List<String> townNames = new ArrayList<>();
-        for(ITerritoryData townData : regionData.getSubjects()){
+        for(TerritoryData townData : regionData.getSubjects()){
             townNames.add(townData.getName());
         }
 
