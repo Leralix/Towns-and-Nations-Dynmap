@@ -37,7 +37,7 @@ public class TownDescription {
 
 
         int numberOfChunks = townData.getNumberOfClaimedChunk();
-        int townLevel = townData.getTownLevel().getTownLevel();
+        int townLevel = townData.getLevel().getTownLevel();
         int nbPlayer = townData.getPlayerIDList().size();
         String description = townData.getDescription();
         PlayerData owner = townData.getLeaderData();
