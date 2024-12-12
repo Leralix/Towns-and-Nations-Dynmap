@@ -31,7 +31,7 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
     private static MarkerAPI markerAPI;
     long updatePeriod;
     ChunkManager chunkManager;
-    PluginVersion pluginVersion = new PluginVersion(0,8,0);
+    PluginVersion pluginVersion = new PluginVersion(0,9,0);
     private final Map<String, AreaMarker> areaMarkers = new HashMap<>();
 
 
