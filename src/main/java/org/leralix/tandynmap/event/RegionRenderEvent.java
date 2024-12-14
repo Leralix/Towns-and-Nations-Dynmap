@@ -1,4 +1,4 @@
-package org.leralix.towns_and_nations_dynmap.event;
+package org.leralix.tandynmap.event;
 
 import com.avaje.ebean.validation.NotNull;
 import org.bukkit.Bukkit;

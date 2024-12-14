@@ -1,4 +1,4 @@
-package org.leralix.towns_and_nations_dynmap.Storage;
+package org.leralix.tandynmap.storage;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -10,24 +10,23 @@ import org.leralix.tan.dataclass.chunk.RegionClaimedChunk;
 import org.leralix.tan.dataclass.chunk.TownClaimedChunk;
 import org.leralix.tan.dataclass.territory.RegionData;
 import org.leralix.tan.dataclass.territory.TownData;
-import org.leralix.towns_and_nations_dynmap.Style.AreaStyle;
-import org.leralix.towns_and_nations_dynmap.TownsAndNations_Dynmap;
-import org.leralix.towns_and_nations_dynmap.event.RegionRenderEvent;
-import org.leralix.towns_and_nations_dynmap.event.TownRenderEvent;
+import org.leralix.tandynmap.style.AreaStyle;
+import org.leralix.tandynmap.TownsAndNations_Dynmap;
+import org.leralix.tandynmap.event.RegionRenderEvent;
+import org.leralix.tandynmap.event.TownRenderEvent;
 
 import java.util.*;
 
 public class ChunkManager {
 
-    private final Map<String, AreaMarker> AreaMap = new HashMap<>();
+    private final Map<String, AreaMarker> areaMap = new HashMap<>();
     private final MarkerSet set;
     private final AreaStyle townAreaStyle;
     private final AreaStyle regionAreaStyle;
     private final TownsAndNations_Dynmap plugin = TownsAndNations_Dynmap.getPlugin();
     private final Map<String, AreaMarker> existingAreaMarkers = plugin.getAreaMarkers();
 
-
-    enum direction {XPLUS, ZPLUS, XMINUS, ZMINUS};
+    enum direction {XPLUS, ZPLUS, XMINUS, ZMINUS}
 
     public ChunkManager(MarkerSet set) {
         this.set = set;
@@ -38,7 +37,7 @@ public class ChunkManager {
 
     public void updateTown(TownData townData, Map<String, AreaMarker> newWorldNameAreaMarkerMap) {
 
-        int poly_index = 0; /* Index of polygon for when a town has multiple shapes. */
+        int polyIndex = 0; /* Index of polygon for when a town has multiple shapes. */
 
         Collection<TownClaimedChunk> townClaimedChunks = townData.getClaims();
         if(townClaimedChunks.isEmpty())
@@ -110,13 +109,12 @@ public class ChunkManager {
             claimedChunksToDraw = townBlockLeftToDraw; /* Replace list (null if no more to process) */
             if(ourShape != null) {
                 try {
-                    poly_index = traceTownOutline(townData, newWorldNameAreaMarkerMap, poly_index, infoWindowPopup, currentWorld.getName(), ourShape, minx, minz);
+                    polyIndex = traceTownOutline(townData, newWorldNameAreaMarkerMap, polyIndex, infoWindowPopup, currentWorld.getName(), ourShape, minx, minz);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
         }
-
 
     }
 
@@ -241,7 +239,7 @@ public class ChunkManager {
 
 
 
-        AreaMap.put(markerID, areamarker);
+        areaMap.put(markerID, areamarker);
     }
 
 

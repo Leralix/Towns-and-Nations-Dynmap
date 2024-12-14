@@ -1,9 +1,9 @@
-package org.leralix.towns_and_nations_dynmap.commands;
+package org.leralix.tandynmap.commands;
 
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.leralix.tan.storage.stored.PlayerDataStorage;
-import org.leralix.towns_and_nations_dynmap.commands.subcommands.UpdateChunks;
+import org.leralix.tandynmap.commands.subcommands.UpdateChunks;
 
 import java.util.ArrayList;
 import java.util.List;

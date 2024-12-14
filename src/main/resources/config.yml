@@ -4,24 +4,24 @@ update:
   # Seconds between checks for TownsAndNations_dynmap updates
   period: 300
 
-layer:
+chunk_layer:
   # Name of the layer
   name: "Towns and Nations"
   # Make the layer hidden by default
   hide_by_default: false
   # ordering priority in layer menu (low goes before high - default is 0)
-  layer_priority: 0
+  priority: 0
   # (optional) set minimum zoom level before layer is visible (0 = default, always visible)
   minimum_zoom: 0
 
 #Landmarks layer
-layer2:
+landmark_layer:
   # Name of the layer
   name: "Towns and Nations - landmarks"
   # Make the layer hidden by default
   hide_by_default: false
   # ordering priority in layer menu (low goes before high - default is 0)
-  layer_priority: 0
+  priority: 1
   # (optional) set minimum zoom level before layer is visible (0 = default, always visible)
   minimum_zoom: 0
 

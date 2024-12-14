@@ -1,9 +1,8 @@
-package org.leralix.towns_and_nations_dynmap.Storage;
+package org.leralix.tandynmap.storage;
 
-import org.bukkit.entity.Player;
 import org.leralix.tan.dataclass.PlayerData;
 import org.leralix.tan.dataclass.territory.TownData;
-import org.leralix.towns_and_nations_dynmap.TownsAndNations_Dynmap;
+import org.leralix.tandynmap.TownsAndNations_Dynmap;
 
 
 import java.util.*;

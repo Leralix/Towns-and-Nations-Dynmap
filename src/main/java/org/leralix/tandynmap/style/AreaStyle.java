@@ -1,4 +1,4 @@
-package org.leralix.towns_and_nations_dynmap.Style;
+package org.leralix.tandynmap.style;
 
 import org.bukkit.configuration.file.FileConfiguration;
 

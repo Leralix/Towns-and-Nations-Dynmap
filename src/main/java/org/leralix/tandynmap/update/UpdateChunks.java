@@ -1,4 +1,4 @@
-package org.leralix.towns_and_nations_dynmap.Update;
+package org.leralix.tandynmap.update;
 
 import org.bukkit.plugin.Plugin;
 import org.dynmap.markers.AreaMarker;
@@ -6,28 +6,28 @@ import org.leralix.tan.dataclass.territory.RegionData;
 import org.leralix.tan.dataclass.territory.TownData;
 import org.leralix.tan.storage.stored.RegionDataStorage;
 import org.leralix.tan.storage.stored.TownDataStorage;
-import org.leralix.towns_and_nations_dynmap.Storage.*;
-import org.leralix.towns_and_nations_dynmap.TownsAndNations_Dynmap;
+import org.leralix.tandynmap.storage.*;
+import org.leralix.tandynmap.TownsAndNations_Dynmap;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class UpdatePositions implements Runnable {
+public class UpdateChunks implements Runnable {
 
-    Map<String, AreaMarker> newmap;
-    ChunkManager chunkManager;
-    Long update_period;
+    final Map<String, AreaMarker> chunkMap;
+    final ChunkManager chunkManager;
+    final Long updatePeriod;
 
-    public UpdatePositions(ChunkManager chunkManager, long update_period) {
+    public UpdateChunks(ChunkManager chunkManager, long updatePeriod) {
         this.chunkManager = chunkManager;
-        this.update_period = update_period;
-        this.newmap = new HashMap<>();
+        this.updatePeriod = updatePeriod;
+        this.chunkMap = new HashMap<>();
     }
 
-    public UpdatePositions(UpdatePositions copy) {
+    public UpdateChunks(UpdateChunks copy) {
         this.chunkManager = copy.chunkManager;
-        this.update_period = copy.update_period;
-        this.newmap = new HashMap<>();
+        this.updatePeriod = copy.updatePeriod;
+        this.chunkMap = new HashMap<>();
     }
 
     @Override
@@ -37,6 +37,11 @@ public class UpdatePositions implements Runnable {
 
 
     public void update() {
+
+        //Reset old markers
+        for (AreaMarker areaMarker : chunkMap.values()){
+            areaMarker.deleteMarker();
+        }
 
         //Update town and regions descriptions
         for(TownData townData : TownDataStorage.getTownMap().values()){
@@ -50,22 +55,17 @@ public class UpdatePositions implements Runnable {
         }
 
 
-        //Reset old markers
-        for (AreaMarker areaMarker : newmap.values()){
-            areaMarker.deleteMarker();
-        }
-
         for(TownData townData : TownDataStorage.getTownMap().values()){
-            chunkManager.updateTown(townData, newmap);
+            chunkManager.updateTown(townData, chunkMap);
         }
 
         for(RegionData regionData : RegionDataStorage.getAllRegions()){
-            chunkManager.updateRegion(regionData, newmap);
+            chunkManager.updateRegion(regionData, chunkMap);
         }
 
         Plugin plugin = TownsAndNations_Dynmap.getPlugin();
-        if(update_period > 0)
-            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new UpdatePositions(this), update_period);
+        if(updatePeriod > 0)
+            plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new UpdateChunks(this), updatePeriod);
 
     }
 }

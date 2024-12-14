@@ -1,10 +1,14 @@
 name: Towns_And_Nations_Dynmap
-version: '0.9.0'
+version: '0.10.0'
 main: org.leralix.towns_and_nations_dynmap.TownsAndNations_Dynmap
 api-version: '1.20'
 depend:  [TownsAndNations, dynmap]
 commands:
   tanmap:
-    description: base command of Town and Nation dynmap
+    description: Town and Nation dynmap command
     permission: townandnation_dynmap.base
+    usage: /<command>
+  tanmapAdmin:
+    description: Town and Nation dynmap admin command
+    permission: townandnation_dynmap.admin
     usage: /<command>

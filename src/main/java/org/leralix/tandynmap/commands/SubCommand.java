@@ -1,4 +1,4 @@
-package org.leralix.towns_and_nations_dynmap.commands;
+package org.leralix.tandynmap.commands;
 
 import org.bukkit.entity.Player;
 
