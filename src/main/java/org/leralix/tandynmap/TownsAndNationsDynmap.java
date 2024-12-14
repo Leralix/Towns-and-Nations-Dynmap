@@ -22,7 +22,7 @@ import java.util.Objects;
 import java.util.logging.Logger;
 
 
-public final class TownsAndNationsDynmap extends JavaPlugin {
+public class TownsAndNationsDynmap extends JavaPlugin {
 
     private final int BSTAT_ID = 20740;
     private static TownsAndNationsDynmap plugin;
