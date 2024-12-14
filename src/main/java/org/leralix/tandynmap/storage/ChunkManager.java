@@ -11,7 +11,7 @@ import org.leralix.tan.dataclass.chunk.TownClaimedChunk;
 import org.leralix.tan.dataclass.territory.RegionData;
 import org.leralix.tan.dataclass.territory.TownData;
 import org.leralix.tandynmap.style.AreaStyle;
-import org.leralix.tandynmap.TownsAndNations_Dynmap;
+import org.leralix.tandynmap.TownsAndNationsDynmap;
 import org.leralix.tandynmap.event.RegionRenderEvent;
 import org.leralix.tandynmap.event.TownRenderEvent;
 
@@ -23,7 +23,7 @@ public class ChunkManager {
     private final MarkerSet set;
     private final AreaStyle townAreaStyle;
     private final AreaStyle regionAreaStyle;
-    private final TownsAndNations_Dynmap plugin = TownsAndNations_Dynmap.getPlugin();
+    private final TownsAndNationsDynmap plugin = TownsAndNationsDynmap.getPlugin();
     private final Map<String, AreaMarker> existingAreaMarkers = plugin.getAreaMarkers();
 
     enum direction {XPLUS, ZPLUS, XMINUS, ZMINUS}

@@ -22,10 +22,10 @@ import java.util.Objects;
 import java.util.logging.Logger;
 
 
-public final class TownsAndNations_Dynmap extends JavaPlugin {
+public final class TownsAndNationsDynmap extends JavaPlugin {
 
     private final int BSTAT_ID = 20740;
-    private static TownsAndNations_Dynmap plugin;
+    private static TownsAndNationsDynmap plugin;
     Logger logger = this.getLogger();
     private MarkerAPI markerAPI;
     private long updatePeriod;
@@ -158,7 +158,7 @@ public final class TownsAndNations_Dynmap extends JavaPlugin {
         // lol
     }
 
-    public static TownsAndNations_Dynmap getPlugin(){
+    public static TownsAndNationsDynmap getPlugin(){
         return plugin;
     }
 

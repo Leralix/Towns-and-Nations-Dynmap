@@ -7,7 +7,7 @@ import org.leralix.tan.dataclass.territory.TownData;
 import org.leralix.tan.storage.stored.RegionDataStorage;
 import org.leralix.tan.storage.stored.TownDataStorage;
 import org.leralix.tandynmap.storage.*;
-import org.leralix.tandynmap.TownsAndNations_Dynmap;
+import org.leralix.tandynmap.TownsAndNationsDynmap;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -63,7 +63,7 @@ public class UpdateChunks implements Runnable {
             chunkManager.updateRegion(regionData, chunkMap);
         }
 
-        Plugin plugin = TownsAndNations_Dynmap.getPlugin();
+        Plugin plugin = TownsAndNationsDynmap.getPlugin();
         if(updatePeriod > 0)
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new UpdateChunks(this), updatePeriod);
 

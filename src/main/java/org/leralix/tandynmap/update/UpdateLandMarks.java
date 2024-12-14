@@ -9,7 +9,7 @@ import org.leralix.tan.dataclass.Landmark;
 import org.leralix.tan.dataclass.Vector3D;
 import org.leralix.tan.storage.stored.LandmarkStorage;
 import org.leralix.tan.storage.stored.TownDataStorage;
-import org.leralix.tandynmap.TownsAndNations_Dynmap;
+import org.leralix.tandynmap.TownsAndNationsDynmap;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,14 +53,14 @@ public class UpdateLandMarks implements Runnable {
             if (existingMarker != null) {
                 existingMarker.setLocation(worldName, vector3D.getX(), vector3D.getY(), vector3D.getZ());
             } else {
-                MarkerIcon landmarkIcon = TownsAndNations_Dynmap.getPlugin().getMarkerAPI().getMarkerIcon("diamond");
+                MarkerIcon landmarkIcon = TownsAndNationsDynmap.getPlugin().getMarkerAPI().getMarkerIcon("diamond");
                 Marker newLandmark = set.createMarker(landmark.getID(), "landmark", worldName, vector3D.getX(), vector3D.getY(), vector3D.getZ(), landmarkIcon, false);
                 newLandmark.setDescription(generateDescription(landmark));
                 landmarks.put(landmark.getID(), newLandmark);
             }
         }
 
-        Plugin plugin = TownsAndNations_Dynmap.getPlugin();
+        Plugin plugin = TownsAndNationsDynmap.getPlugin();
         if(updatePeriod > 0)
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new UpdateLandMarks(this), updatePeriod);
 
@@ -68,7 +68,7 @@ public class UpdateLandMarks implements Runnable {
 
     private String generateDescription(Landmark landmark) {
 
-        String res = TownsAndNations_Dynmap.getPlugin().getConfig().getString("landmark_infowindow");
+        String res = TownsAndNationsDynmap.getPlugin().getConfig().getString("landmark_infowindow");
         if(res == null)
             return "No description";
 

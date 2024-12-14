@@ -2,7 +2,7 @@ package org.leralix.tandynmap.storage;
 
 import org.leralix.tan.dataclass.PlayerData;
 import org.leralix.tan.dataclass.territory.TownData;
-import org.leralix.tandynmap.TownsAndNations_Dynmap;
+import org.leralix.tandynmap.TownsAndNationsDynmap;
 
 
 import java.util.*;
@@ -95,7 +95,7 @@ public class TownDescription {
     }
 
     public String getChunkDescription(){
-        String description = TownsAndNations_Dynmap.getPlugin().getConfig().getString("town_infowindow", "Config not found - town");
+        String description = TownsAndNationsDynmap.getPlugin().getConfig().getString("town_infowindow", "Config not found - town");
 
         description = description.replace("%TOWN_NAME%", this.name);
         description = description.replace("%DAYS_SINCE_CREATION%", String.valueOf(this.daysSinceCreation));
