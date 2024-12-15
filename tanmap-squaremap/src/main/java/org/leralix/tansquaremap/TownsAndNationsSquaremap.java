@@ -1,27 +1,25 @@
-package org.leralix.tandynmap;
+package org.leralix.tansquaremap;
 
 import org.bukkit.plugin.Plugin;
-import org.dynmap.DynmapAPI;
 import org.leralix.tancommon.TownsAndNationsMapCommon;
 import org.leralix.tancommon.markers.CommonMarkerAPI;
-import org.leralix.tandynmap.markers.DynmapMarkerAPI;
+import org.leralix.tansquaremap.markers.SquaremapMarkerAPI;
 
-public class TownsAndNationsDynmap extends TownsAndNationsMapCommon {
+public class TownsAndNationsSquaremap extends TownsAndNationsMapCommon {
 
 
     @Override
     protected String getSubMapName() {
-        return "dynmap";
+        return "squaremap";
     }
 
     @Override
     protected int getBStatID() {
-        return 20740;
+        return 24150;
     }
 
     @Override
     protected CommonMarkerAPI createMarkerAPI(Plugin markerAPI) {
-        DynmapAPI dynmapAPI = (DynmapAPI) markerAPI;
-        return new DynmapMarkerAPI(dynmapAPI.getMarkerAPI());
+        return new SquaremapMarkerAPI();
     }
 }

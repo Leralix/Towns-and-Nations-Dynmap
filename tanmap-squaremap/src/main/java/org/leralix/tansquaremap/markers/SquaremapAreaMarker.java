@@ -1,47 +1,48 @@
-package org.leralix.tandynmap.markers;
+package org.leralix.tansquaremap.markers;
 
-import org.dynmap.markers.AreaMarker;
+
 import org.leralix.tancommon.markers.CommonAreaMarker;
+import xyz.jpenilla.squaremap.api.marker.Marker;
 
-public class DynmapAreaMarker implements CommonAreaMarker {
+public class SquaremapAreaMarker implements CommonAreaMarker {
 
-    AreaMarker areaMarker;
-    public DynmapAreaMarker(AreaMarker areaMarker){
+    Marker areaMarker;
+    public SquaremapAreaMarker(Marker areaMarker){
         this.areaMarker = areaMarker;
     }
 
     @Override
     public void deleteMarker() {
-        areaMarker.deleteMarker();
+
     }
 
     @Override
     public void setCornerLocations(double[] x, double[] z) {
-        areaMarker.setCornerLocations(x, z);
+
     }
 
     @Override
     public void setLabel(String name) {
-        areaMarker.setLabel(name);
+
     }
 
     @Override
     public void setDescription(String infoWindowPopup) {
-        areaMarker.setDescription(infoWindowPopup);
+
     }
 
     @Override
     public void setLineStyle(int baseStrokeWeight, double strokeOpacity, int chunkColorCode) {
-        areaMarker.setLineStyle(baseStrokeWeight, strokeOpacity, chunkColorCode);
+
     }
 
     @Override
     public void setFillStyle(double fillOpacity, int chunkColorCode) {
-        areaMarker.setFillStyle(fillOpacity, chunkColorCode);
+
     }
 
     @Override
     public void setRangeY(int i, int i1) {
-        areaMarker.setRangeY(i, i1);
+
     }
 }

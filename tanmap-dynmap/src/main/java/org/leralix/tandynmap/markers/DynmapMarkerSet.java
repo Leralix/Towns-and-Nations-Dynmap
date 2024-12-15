@@ -1,35 +1,24 @@
 package org.leralix.tandynmap.markers;
 
 import org.dynmap.markers.*;
+import org.leralix.tancommon.markers.CommonAreaMarker;
+import org.leralix.tancommon.markers.CommonMarker;
+import org.leralix.tancommon.markers.CommonMarkerSet;
+
+import java.awt.*;
 
 public class DynmapMarkerSet implements CommonMarkerSet {
 
     MarkerAPI markerAPI;
     MarkerSet markerSet;
 
-    public DynmapMarkerSet(MarkerAPI markerAPI, String id, String layerName) {
+    public DynmapMarkerSet(MarkerAPI markerAPI, String id, String layerName, int minZoom, int chunkLayerPriority, boolean hideByDefault) {
         this.markerAPI = markerAPI;
         this.markerSet = markerAPI.createMarkerSet(id, layerName, null, false);
-    }
 
-    @Override
-    public void setMarkerSetLabel(String landmarks) {
-        markerSet.setMarkerSetLabel(landmarks);
-    }
-
-    @Override
-    public void setMinZoom(int minZoom) {
-        markerSet.setMinZoom(minZoom);
-    }
-
-    @Override
-    public void setLayerPriority(int priority) {
-        markerSet.setLayerPriority(priority);
-    }
-
-    @Override
-    public void setHideByDefault(boolean isHidden) {
-        markerSet.setHideByDefault(isHidden);
+        this.markerSet.setMinZoom(minZoom);
+        this.markerSet.setLayerPriority(chunkLayerPriority);
+        this.markerSet.setHideByDefault(hideByDefault);
     }
 
     @Override
@@ -58,8 +47,8 @@ public class DynmapMarkerSet implements CommonMarkerSet {
     }
 
     @Override
-    public CommonAreaMarker createAreaMarker(String polyID, String name, boolean b, String worldName, double[] x, double[] z, boolean b1) {
-        AreaMarker marker = markerSet.createAreaMarker(polyID, name, b, worldName, x, z, b1);
+    public CommonAreaMarker createAreaMarker(String polyID, String name, boolean b, String worldName, double[] x, double[] z, Color color, String description) {
+        AreaMarker marker = markerSet.createAreaMarker(polyID, name, b, worldName, x, z, false);
         return new DynmapAreaMarker(marker);
     }
 }

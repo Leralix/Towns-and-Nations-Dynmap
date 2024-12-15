@@ -1,28 +1,28 @@
-package org.leralix.tandynmap.markers;
+package org.leralix.tansquaremap.markers;
 
-import org.dynmap.markers.Marker;
 import org.leralix.tancommon.markers.CommonMarker;
+import xyz.jpenilla.squaremap.api.marker.Marker;
 
-public class DynmapMarker implements CommonMarker {
+public class SquaremapMarker implements CommonMarker {
 
     Marker marker;
 
-    public DynmapMarker(Marker marker){
+    public SquaremapMarker(Marker marker){
         this.marker = marker;
     }
 
     @Override
     public void deleteMarker() {
-        marker.deleteMarker();
+
     }
 
     @Override
     public void setDescription(String newDescription) {
-        marker.setDescription(newDescription);
+
     }
 
     @Override
     public void setLocation(String worldName, int x, int y, int z) {
-        marker.setLocation(worldName, x, y, z);
+
     }
 }
