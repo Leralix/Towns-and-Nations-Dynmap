@@ -11,13 +11,10 @@ plugins {
             from "$projectDir/src/main/resources/plugin.yml"
             into "$buildDir/resources/main"
         }
-        dependencies {
-            implementation rootProject
-        }
-
         jar {
             from rootProject.sourceSets.main.output
         }
+
     }
 
 allprojects {
