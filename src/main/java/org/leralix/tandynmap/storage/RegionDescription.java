@@ -2,7 +2,7 @@ package org.leralix.tandynmap.storage;
 
 import org.leralix.tan.dataclass.territory.RegionData;
 import org.leralix.tan.dataclass.territory.TerritoryData;
-import org.leralix.tandynmap.TownsAndNationsDynmap;
+import org.leralix.tandynmap.TownsAndNationsMapCommon;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,7 +62,7 @@ public class RegionDescription {
 
     public String getChunkDescription(){
 
-        String description = TownsAndNationsDynmap.getPlugin().getConfig().getString("region_infowindow", "Config not found - region");
+        String description = TownsAndNationsMapCommon.getPlugin().getConfig().getString("region_infowindow", "Config not found - region");
 
         description = description.replace("%REGION_NAME%", this.name);
         description =  description.replace("%DAYS_SINCE_CREATION%", String.valueOf(this.daysSinceCreation));

@@ -2,40 +2,41 @@ package org.leralix.tandynmap.storage;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.dynmap.markers.AreaMarker;
-import org.dynmap.markers.MarkerSet;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.leralix.tan.TownsAndNations;
 import org.leralix.tan.dataclass.chunk.ClaimedChunk2;
 import org.leralix.tan.dataclass.chunk.RegionClaimedChunk;
 import org.leralix.tan.dataclass.chunk.TownClaimedChunk;
 import org.leralix.tan.dataclass.territory.RegionData;
 import org.leralix.tan.dataclass.territory.TownData;
-import org.leralix.tandynmap.style.AreaStyle;
-import org.leralix.tandynmap.TownsAndNationsDynmap;
+import org.leralix.tandynmap.TownsAndNationsMapCommon;
 import org.leralix.tandynmap.event.RegionRenderEvent;
 import org.leralix.tandynmap.event.TownRenderEvent;
+import org.leralix.tandynmap.markers.CommonAreaMarker;
+import org.leralix.tandynmap.markers.CommonMarkerSet;
+import org.leralix.tandynmap.style.AreaStyle;
 
 import java.util.*;
 
 public class ChunkManager {
 
-    private final Map<String, AreaMarker> areaMap = new HashMap<>();
-    private final MarkerSet set;
+    private final Map<String, CommonAreaMarker> areaMap = new HashMap<>();
+    private final CommonMarkerSet set;
     private final AreaStyle townAreaStyle;
     private final AreaStyle regionAreaStyle;
-    private final TownsAndNationsDynmap plugin = TownsAndNationsDynmap.getPlugin();
-    private final Map<String, AreaMarker> existingAreaMarkers = plugin.getAreaMarkers();
+    private final TownsAndNationsMapCommon plugin = TownsAndNationsMapCommon.getPlugin();
+    private final Map<String, CommonAreaMarker> existingAreaMarkers = plugin.getAreaMarkers();
 
     enum direction {XPLUS, ZPLUS, XMINUS, ZMINUS}
 
-    public ChunkManager(MarkerSet set) {
+    public ChunkManager(CommonMarkerSet set) {
         this.set = set;
-
-        this.townAreaStyle = new AreaStyle(TownsAndNations.getPlugin().getConfig(), "town_fieldStyle");
-        this.regionAreaStyle = new AreaStyle(TownsAndNations.getPlugin().getConfig(), "region_fieldStyle");
+        FileConfiguration fc = TownsAndNations.getPlugin().getConfig();
+        this.townAreaStyle = new AreaStyle(fc, "town_fieldStyle");
+        this.regionAreaStyle = new AreaStyle(fc, "region_fieldStyle");
     }
 
-    public void updateTown(TownData townData, Map<String, AreaMarker> newWorldNameAreaMarkerMap) {
+    public void updateTown(TownData townData, Map<String, CommonAreaMarker> newWorldNameAreaMarkerMap) {
 
         int polyIndex = 0; /* Index of polygon for when a town has multiple shapes. */
 
@@ -118,9 +119,9 @@ public class ChunkManager {
 
     }
 
-    public void updateRegion(RegionData regionData, Map<String, AreaMarker> newWorldNameAreaMarkerMap) {
+    public void updateRegion(RegionData regionData, Map<String, CommonAreaMarker> newWorldNameAreaMarkerMap) {
 
-        int poly_index = 0; /* Index of polygon for when a town has multiple shapes. */
+        int polyIndex = 0; /* Index of polygon for when a town has multiple shapes. */
 
         Collection<RegionClaimedChunk> townClaimedChunks = regionData.getClaims();
         if(townClaimedChunks.isEmpty())
@@ -192,7 +193,7 @@ public class ChunkManager {
             claimedChunksToDraw = townBlockLeftToDraw; /* Replace list (null if no more to process) */
             if(ourShape != null) {
                 try {
-                    poly_index = traceTownOutline(regionData, newWorldNameAreaMarkerMap, poly_index, infoWindowPopup, currentWorld.getName(), ourShape, minx, minz);
+                    polyIndex = traceTownOutline(regionData, newWorldNameAreaMarkerMap, polyIndex, infoWindowPopup, currentWorld.getName(), ourShape, minx, minz);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -211,7 +212,7 @@ public class ChunkManager {
         int color = TownsAndNations.getPlugin().getAPI().getChunkColor(claimedChunk);
 
 
-        AreaMarker areamarker = set.createAreaMarker(markerID, "------------------------", false, worldName, x, z, false);
+        CommonAreaMarker areamarker = set.createAreaMarker(markerID, "------------------------", false, worldName, x, z, false);
 
 
         if(claimedChunk instanceof TownClaimedChunk townChunk) {
@@ -269,7 +270,7 @@ public class ChunkManager {
         }
         return cnt;
     }
-    private int traceTownOutline(RegionData regionData, Map<String, AreaMarker> newWorldNameMarkerMap, int poly_index,
+    private int traceTownOutline(RegionData regionData, Map<String, CommonAreaMarker> newWorldNameMarkerMap, int poly_index,
                                  String infoWindowPopup, String worldName, TileFlags ourShape, int minx, int minz) throws Exception {
 
         double[] x;
@@ -353,7 +354,7 @@ public class ChunkManager {
             z[i] = (double)line[1] * (double)16;
         }
         /* Find existing one */
-        AreaMarker areaMarker = existingAreaMarkers.remove(polyid); /* Existing area? */
+        CommonAreaMarker areaMarker = existingAreaMarkers.remove(polyid); /* Existing area? */
         if(areaMarker == null) {
             areaMarker = set.createAreaMarker(polyid, regionData.getName(), false, worldName, x, z, false);
             if(areaMarker == null) {
@@ -364,8 +365,8 @@ public class ChunkManager {
             }
         }
         else {
-            areaMarker.setCornerLocations(x, z); /* Replace corner locations */
-            areaMarker.setLabel(regionData.getName());   /* Update label */
+            areaMarker.setCornerLocations(x, z);
+            areaMarker.setLabel(regionData.getName());
         }
         /* Set popup */
         areaMarker.setDescription(infoWindowPopup);
@@ -382,7 +383,7 @@ public class ChunkManager {
         poly_index++;
         return poly_index;
     }
-    private int traceTownOutline(TownData town, Map<String, AreaMarker> newWorldNameMarkerMap, int poly_index,
+    private int traceTownOutline(TownData town, Map<String, CommonAreaMarker> newWorldNameMarkerMap, int poly_index,
                                         String infoWindowPopup, String worldName, TileFlags ourShape, int minx, int minz) throws Exception {
 
         double[] x;
@@ -466,7 +467,7 @@ public class ChunkManager {
             z[i] = (double)line[1] * (double)16;
         }
         /* Find existing one */
-        AreaMarker areaMarker = existingAreaMarkers.remove(polyid); /* Existing area? */
+        CommonAreaMarker areaMarker = existingAreaMarkers.remove(polyid);
         if(areaMarker == null) {
             areaMarker = set.createAreaMarker(polyid, town.getName(), false, worldName, x, z, false);
             if(areaMarker == null) {
@@ -477,12 +478,10 @@ public class ChunkManager {
             }
         }
         else {
-            areaMarker.setCornerLocations(x, z); /* Replace corner locations */
-            areaMarker.setLabel(town.getName());   /* Update label */
+            areaMarker.setCornerLocations(x, z);
+            areaMarker.setLabel(town.getName());
         }
-        /* Set popup */
         areaMarker.setDescription(infoWindowPopup);
-        /* Set line and fill properties */
         addStyle(town, areaMarker);
 
         /* Fire an event allowing other plugins to alter the AreaMarker */
@@ -496,20 +495,16 @@ public class ChunkManager {
         return poly_index;
     }
 
-    private void addStyle(TownData town, AreaMarker m) {
-        AreaStyle as = townAreaStyle;	/* Look up custom style for town, if any */
-        AreaStyle ns = regionAreaStyle;	/* Look up nation style, if any */
+    private void addStyle(TownData town, CommonAreaMarker m) {
 
         m.setLineStyle(townAreaStyle.getBaseStrokeWeight(), townAreaStyle.getStrokeOpacity(), town.getChunkColorCode());
         m.setFillStyle(townAreaStyle.getFillOpacity(), town.getChunkColorCode());
 
-        m.setRangeY(16, 16);
-        //m.setBoostFlag(defstyle.getBoost(as, ns));
+        m.setRangeY(16, 16); //TODO : check if this is usefull
+        //m.setBoostFlag(defstyle.getBoost(as, ns)); //TODO : Why is it commented ?
 
     }
-    private void addStyle(RegionData region, AreaMarker m) {
-        AreaStyle as = townAreaStyle;	/* Look up custom style for region, if any */
-        AreaStyle ns = regionAreaStyle;	/* Look up nation style, if any */
+    private void addStyle(RegionData region, CommonAreaMarker m) {
 
         m.setLineStyle(townAreaStyle.getBaseStrokeWeight(), townAreaStyle.getStrokeOpacity(), region.getChunkColorCode());
         m.setFillStyle(townAreaStyle.getFillOpacity(), region.getChunkColorCode());

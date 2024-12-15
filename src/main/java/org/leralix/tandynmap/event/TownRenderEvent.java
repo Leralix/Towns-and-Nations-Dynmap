@@ -1,18 +1,17 @@
 package org.leralix.tandynmap.event;
 
-import com.avaje.ebean.validation.NotNull;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.dynmap.markers.AreaMarker;
 import org.leralix.tan.dataclass.territory.TownData;
+import org.leralix.tandynmap.markers.CommonAreaMarker;
 
 public class TownRenderEvent extends Event {
     private static HandlerList handlers = new HandlerList();
     private final TownData town;
-    private final AreaMarker areaMarker;
+    private final CommonAreaMarker areaMarker;
 
-    public TownRenderEvent(TownData town, AreaMarker areaMarker) {
+    public TownRenderEvent(TownData town, CommonAreaMarker areaMarker) {
         super(!Bukkit.getServer().isPrimaryThread());
         this.town = town;
         this.areaMarker = areaMarker;
@@ -22,11 +21,10 @@ public class TownRenderEvent extends Event {
         return town;
     }
 
-    public AreaMarker getAreaMarker() {
+    public CommonAreaMarker getAreaMarker() {
         return areaMarker;
     }
 
-    @NotNull
     public HandlerList getHandlers() {
         return handlers;
     }

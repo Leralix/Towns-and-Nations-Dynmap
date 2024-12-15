@@ -1,20 +1,20 @@
 package org.leralix.tandynmap.update;
 
 import org.bukkit.plugin.Plugin;
-import org.dynmap.markers.AreaMarker;
 import org.leralix.tan.dataclass.territory.RegionData;
 import org.leralix.tan.dataclass.territory.TownData;
 import org.leralix.tan.storage.stored.RegionDataStorage;
 import org.leralix.tan.storage.stored.TownDataStorage;
+import org.leralix.tandynmap.markers.CommonAreaMarker;
 import org.leralix.tandynmap.storage.*;
-import org.leralix.tandynmap.TownsAndNationsDynmap;
+import org.leralix.tandynmap.TownsAndNationsMapCommon;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class UpdateChunks implements Runnable {
 
-    final Map<String, AreaMarker> chunkMap;
+    final Map<String, CommonAreaMarker> chunkMap;
     final ChunkManager chunkManager;
     final Long updatePeriod;
 
@@ -39,7 +39,7 @@ public class UpdateChunks implements Runnable {
     public void update() {
 
         //Reset old markers
-        for (AreaMarker areaMarker : chunkMap.values()){
+        for (CommonAreaMarker areaMarker : chunkMap.values()){
             areaMarker.deleteMarker();
         }
 
@@ -63,7 +63,7 @@ public class UpdateChunks implements Runnable {
             chunkManager.updateRegion(regionData, chunkMap);
         }
 
-        Plugin plugin = TownsAndNationsDynmap.getPlugin();
+        Plugin plugin = TownsAndNationsMapCommon.getPlugin();
         if(updatePeriod > 0)
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new UpdateChunks(this), updatePeriod);
 

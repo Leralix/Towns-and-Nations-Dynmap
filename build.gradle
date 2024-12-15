@@ -2,20 +2,17 @@ plugins {
     id 'java'
 }
 
-    subprojects {
-        apply plugin: 'java'
-        task("hello").doLast {
-            println "Hello from $project.name"
-        }
-        task copyPluginYml(type: Copy) {
-            from "$projectDir/src/main/resources/plugin.yml"
-            into "$buildDir/resources/main"
-        }
-        jar {
-            from rootProject.sourceSets.main.output
-        }
-
+subprojects {
+    apply plugin: 'java'
+    task copyPluginYml(type: Copy) {
+        from "$projectDir/src/main/resources/plugin.yml"
+        into "$buildDir/resources/main"
     }
+    jar {
+        from rootProject.sourceSets.main.output
+    }
+
+}
 
 allprojects {
     group = 'org.leralix'
@@ -31,13 +28,6 @@ allprojects {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/groups/public/"
         }
-        maven {
-            name = "dynmap"
-            url 'https://repo.mikeprimm.com/'
-        }
-        flatDir {
-            dirs 'libs'
-        }
         flatDir {
             dirs "$rootDir/libs"
         }
@@ -45,7 +35,6 @@ allprojects {
 
     dependencies {
         compileOnly "org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT"
-        compileOnly "us.dynmap:dynmap-api:2.5"
         compileOnly name: 'Towns_and_Nations-0.11.8'
     }
 

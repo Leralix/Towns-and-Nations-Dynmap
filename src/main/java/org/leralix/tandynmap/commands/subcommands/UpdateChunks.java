@@ -1,7 +1,7 @@
 package org.leralix.tandynmap.commands.subcommands;
 
 import org.bukkit.entity.Player;
-import org.leralix.tandynmap.TownsAndNationsDynmap;
+import org.leralix.tandynmap.TownsAndNationsMapCommon;
 import org.leralix.tandynmap.commands.SubCommand;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public class UpdateChunks extends SubCommand {
     @Override
     public void perform(Player player, String[] args){
         try {
-            TownsAndNationsDynmap.getPlugin().updateDynmap();
+            TownsAndNationsMapCommon.getPlugin().updateDynmap();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

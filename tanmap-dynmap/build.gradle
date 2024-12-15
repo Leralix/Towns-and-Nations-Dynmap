@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    maven {
+        name = "dynmap"
+        url 'https://repo.mikeprimm.com/'
+    }
+}
+
+dependencies {
+    implementation project(path: ':')
+    compileOnly "us.dynmap:dynmap-api:2.5"
+}
+
+tasks.test {
+    useJUnitPlatform()
+}

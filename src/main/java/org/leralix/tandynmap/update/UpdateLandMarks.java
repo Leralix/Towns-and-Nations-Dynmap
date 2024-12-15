@@ -2,26 +2,25 @@ package org.leralix.tandynmap.update;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.dynmap.markers.Marker;
-import org.dynmap.markers.MarkerIcon;
-import org.dynmap.markers.MarkerSet;
 import org.leralix.tan.dataclass.Landmark;
 import org.leralix.tan.dataclass.Vector3D;
 import org.leralix.tan.storage.stored.LandmarkStorage;
 import org.leralix.tan.storage.stored.TownDataStorage;
-import org.leralix.tandynmap.TownsAndNationsDynmap;
+import org.leralix.tandynmap.TownsAndNationsMapCommon;
+import org.leralix.tandynmap.markers.CommonMarker;
+import org.leralix.tandynmap.markers.CommonMarkerSet;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class UpdateLandMarks implements Runnable {
 
-    private final Map<String, Marker> landmarks;
-    private final MarkerSet set;
+    private final Map<String, CommonMarker> landmarks;
+    private final CommonMarkerSet set;
     private final long updatePeriod;
 
 
-    public UpdateLandMarks(MarkerSet set, long updatePeriod){
+    public UpdateLandMarks(CommonMarkerSet set, long updatePeriod){
         this.landmarks = new HashMap<>();
         this.set = set;
         this.updatePeriod = updatePeriod;
@@ -41,26 +40,25 @@ public class UpdateLandMarks implements Runnable {
     public void update(){
 
         //Reset old markers
-        for (Marker landmarkMarker : landmarks.values()){
+        for (CommonMarker landmarkMarker : landmarks.values()){
             landmarkMarker.deleteMarker();
         }
 
         for(Landmark landmark : LandmarkStorage.getList()) {
             Vector3D vector3D = landmark.getPosition();
-            Marker existingMarker = set.findMarker(landmark.getID());
+            CommonMarker existingMarker = set.findMarker(landmark.getID());
             String worldName = vector3D.getWorld().getName();
 
             if (existingMarker != null) {
                 existingMarker.setLocation(worldName, vector3D.getX(), vector3D.getY(), vector3D.getZ());
             } else {
-                MarkerIcon landmarkIcon = TownsAndNationsDynmap.getPlugin().getMarkerAPI().getMarkerIcon("diamond");
-                Marker newLandmark = set.createMarker(landmark.getID(), "landmark", worldName, vector3D.getX(), vector3D.getY(), vector3D.getZ(), landmarkIcon, false);
+                CommonMarker newLandmark = set.createMarker(landmark.getID(), "landmark", worldName, vector3D.getX(), vector3D.getY(), vector3D.getZ(), false);
                 newLandmark.setDescription(generateDescription(landmark));
                 landmarks.put(landmark.getID(), newLandmark);
             }
         }
 
-        Plugin plugin = TownsAndNationsDynmap.getPlugin();
+        Plugin plugin = TownsAndNationsMapCommon.getPlugin();
         if(updatePeriod > 0)
             plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new UpdateLandMarks(this), updatePeriod);
 
@@ -68,7 +66,7 @@ public class UpdateLandMarks implements Runnable {
 
     private String generateDescription(Landmark landmark) {
 
-        String res = TownsAndNationsDynmap.getPlugin().getConfig().getString("landmark_infowindow");
+        String res = TownsAndNationsMapCommon.getPlugin().getConfig().getString("landmark_infowindow");
         if(res == null)
             return "No description";
 
