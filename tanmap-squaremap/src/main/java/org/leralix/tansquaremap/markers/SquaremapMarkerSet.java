@@ -58,7 +58,9 @@ public class SquaremapMarkerSet implements CommonMarkerSet {
             pointList.add(Point.of(x[i], z[i]));
         }
 
-        polyID = polyID.replace(" ", "_");
+        String regex = "[^a-zA-Z0-9._-]";
+        polyID = polyID.replaceAll(regex, "_");
+
         MarkerOptions options = MarkerOptions.builder().
                 fillColor(color).
                 fillOpacity(0.5).
