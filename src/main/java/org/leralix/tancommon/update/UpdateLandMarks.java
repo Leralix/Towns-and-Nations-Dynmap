@@ -10,24 +10,19 @@ import org.leralix.tancommon.markers.CommonMarker;
 import org.leralix.tancommon.markers.CommonMarkerSet;
 import org.leralix.tancommon.TownsAndNationsMapCommon;
 
-import java.util.HashMap;
-import java.util.Map;
 
 public class UpdateLandMarks implements Runnable {
 
-    private final Map<String, CommonMarker> landmarks;
     private final CommonMarkerSet set;
     private final long updatePeriod;
 
 
     public UpdateLandMarks(CommonMarkerSet set, long updatePeriod){
-        this.landmarks = new HashMap<>();
         this.set = set;
         this.updatePeriod = updatePeriod;
     }
 
     public UpdateLandMarks(UpdateLandMarks copy) {
-        this.landmarks = new HashMap<>();
         this.set = copy.set;
         this.updatePeriod = copy.updatePeriod;
     }
@@ -38,24 +33,13 @@ public class UpdateLandMarks implements Runnable {
     }
 
     public void update(){
-
-        //Reset old markers
-        for (CommonMarker landmarkMarker : landmarks.values()){
-            landmarkMarker.deleteMarker();
-        }
+        set.deleteAllMarkers();
 
         for(Landmark landmark : LandmarkStorage.getList()) {
             Vector3D vector3D = landmark.getPosition();
-            CommonMarker existingMarker = set.findMarker(landmark.getID());
             String worldName = vector3D.getWorld().getName();
-
-            if (existingMarker != null) {
-                existingMarker.setLocation(worldName, vector3D.getX(), vector3D.getY(), vector3D.getZ());
-            } else {
-                CommonMarker newLandmark = set.createMarker(landmark.getID(), "landmark", worldName, vector3D.getX(), vector3D.getY(), vector3D.getZ(), false);
-                newLandmark.setDescription(generateDescription(landmark));
-                landmarks.put(landmark.getID(), newLandmark);
-            }
+            CommonMarker newLandmark = set.createMarker(landmark.getID(), "landmark", worldName, vector3D.getX(), vector3D.getY(), vector3D.getZ(), false);
+            newLandmark.setDescription(generateDescription(landmark));
         }
 
         Plugin plugin = TownsAndNationsMapCommon.getPlugin();

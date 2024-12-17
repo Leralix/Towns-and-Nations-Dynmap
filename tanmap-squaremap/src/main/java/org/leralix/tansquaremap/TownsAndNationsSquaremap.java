@@ -2,8 +2,8 @@ package org.leralix.tansquaremap;
 
 import org.bukkit.plugin.Plugin;
 import org.leralix.tancommon.TownsAndNationsMapCommon;
-import org.leralix.tancommon.markers.CommonMarkerAPI;
-import org.leralix.tansquaremap.markers.SquaremapMarkerAPI;
+import org.leralix.tancommon.markers.CommonLayerAPI;
+import org.leralix.tansquaremap.markers.SquaremapLayerAPI;
 
 public class TownsAndNationsSquaremap extends TownsAndNationsMapCommon {
 
@@ -19,7 +19,7 @@ public class TownsAndNationsSquaremap extends TownsAndNationsMapCommon {
     }
 
     @Override
-    protected CommonMarkerAPI createMarkerAPI(Plugin markerAPI) {
-        return new SquaremapMarkerAPI();
+    protected CommonLayerAPI createMarkerAPI(Plugin markerAPI) {
+        return new SquaremapLayerAPI();
     }
 }

@@ -8,12 +8,13 @@ import org.leralix.tan.TownsAndNations;
 import org.leralix.tan.dataclass.PluginVersion;
 import org.leralix.tancommon.bstat.Metrics;
 import org.leralix.tancommon.commands.CommandManager;
-import org.leralix.tancommon.markers.CommonMarkerAPI;
+import org.leralix.tancommon.markers.CommonLayerAPI;
 import org.leralix.tancommon.markers.CommonMarkerSet;
 import org.leralix.tancommon.storage.ChunkManager;
 import org.leralix.tancommon.update.UpdateChunks;
 import org.leralix.tancommon.update.UpdateLandMarks;
 
+import java.io.File;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,13 +23,13 @@ import java.util.logging.Logger;
 public abstract class TownsAndNationsMapCommon extends JavaPlugin {
 
     private static TownsAndNationsMapCommon plugin;
-    Logger logger = this.getLogger();
-    private CommonMarkerAPI markerAPI;
+    private final Logger logger = this.getLogger();
+    private CommonLayerAPI markerAPI;
     private long updatePeriod;
     private final PluginVersion pluginVersion = new PluginVersion(0,10 ,0);
 
-    UpdateLandMarks updateLandMarks;
-    UpdateChunks updateChunks;
+    private UpdateLandMarks updateLandMarks;
+    private UpdateChunks updateChunks;
 
     @Override
     public void onEnable() {
@@ -63,6 +64,14 @@ public abstract class TownsAndNationsMapCommon extends JavaPlugin {
             return;
         }
 
+        File iconsDir = new File(getDataFolder(), "icons");
+        if (!iconsDir.exists()) {
+            iconsDir.mkdirs(); // Crée le dossier s'il n'existe pas
+        }
+
+        TownsAndNationsMapCommon.getPlugin().saveResource("icons/landmark.png", true);
+
+
         Objects.requireNonNull(getCommand("tanmap")).setExecutor(new CommandManager());
 
 
@@ -83,11 +92,11 @@ public abstract class TownsAndNationsMapCommon extends JavaPlugin {
         if(per < 15) per = 15;
         updatePeriod = per * 20L;
 
-        initialiseClaimedChunks(markerAPI);
-        initialiseLandmarks(markerAPI);
+        initialiseClaimedChunks();
+        initialiseLandmarks();
     }
 
-    private void initialiseClaimedChunks(CommonMarkerAPI markerAPI) {
+    private void initialiseClaimedChunks() {
 
         FileConfiguration cfg = getConfig();
         cfg.options().copyDefaults(true); //TODO : check if that is really useful
@@ -107,13 +116,12 @@ public abstract class TownsAndNationsMapCommon extends JavaPlugin {
                 hideByDefault
                 );
 
-        set.deleteAllMarkers();
 
         updateChunks = new UpdateChunks(new ChunkManager(set), updatePeriod);
         getServer().getScheduler().scheduleSyncDelayedTask(this, updateChunks, 40);
     }
 
-    private void initialiseLandmarks(CommonMarkerAPI markerAPI) {
+    private void initialiseLandmarks() {
         FileConfiguration cfg = getConfig();
         cfg.options().copyDefaults(true); //TODO : check if that is really useful
         this.saveConfig();
@@ -132,7 +140,6 @@ public abstract class TownsAndNationsMapCommon extends JavaPlugin {
                 hideByDefault
         );
 
-        set.deleteAllMarkers();
 
         updateLandMarks = new UpdateLandMarks(set, updatePeriod);
         getServer().getScheduler().scheduleSyncDelayedTask(this, updateLandMarks, 40);
@@ -153,7 +160,7 @@ public abstract class TownsAndNationsMapCommon extends JavaPlugin {
         updateLandMarks.update();
     }
 
-    public CommonMarkerAPI getMarkerAPI() {
+    public CommonLayerAPI getMarkerAPI() {
         return this.markerAPI;
     }
 
@@ -161,7 +168,7 @@ public abstract class TownsAndNationsMapCommon extends JavaPlugin {
 
     protected abstract int getBStatID();
 
-    protected abstract CommonMarkerAPI createMarkerAPI(Plugin markerAPI);
+    protected abstract CommonLayerAPI createMarkerAPI(Plugin markerAPI);
 
 }
 

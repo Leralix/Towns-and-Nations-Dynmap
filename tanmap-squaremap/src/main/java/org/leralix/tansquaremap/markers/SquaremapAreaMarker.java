@@ -2,11 +2,13 @@ package org.leralix.tansquaremap.markers;
 
 
 import org.leralix.tancommon.markers.CommonAreaMarker;
+import xyz.jpenilla.squaremap.api.SimpleLayerProvider;
 import xyz.jpenilla.squaremap.api.marker.Marker;
 
 public class SquaremapAreaMarker implements CommonAreaMarker {
 
     Marker areaMarker;
+
     public SquaremapAreaMarker(Marker areaMarker){
         this.areaMarker = areaMarker;
     }

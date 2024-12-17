@@ -9,43 +9,56 @@ import xyz.jpenilla.squaremap.api.SimpleLayerProvider;
 import xyz.jpenilla.squaremap.api.marker.Marker;
 import xyz.jpenilla.squaremap.api.marker.MarkerOptions;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class SquaremapMarkerSet implements CommonMarkerSet {
+public class SquaremapLayer implements CommonMarkerSet {
 
-    SimpleLayerProvider markerSet;
+    Map<Key, SimpleLayerProvider> layerMap;
 
-    public SquaremapMarkerSet(SimpleLayerProvider markerSet) {
-        this.markerSet = markerSet;
+    public SquaremapLayer(Map<Key, SimpleLayerProvider> markerSet) {
+        this.layerMap = markerSet;
     }
 
 
     @Override
     public void deleteAllMarkers() {
-        markerSet.clearMarkers();
-    }
-
-    @Override
-    public CommonMarker findMarker(String id) {
-        Marker marker = markerSet.registeredMarkers().get(Key.of(id));
-        return new SquaremapMarker(marker);
+        for(SimpleLayerProvider marker : layerMap.values()){
+            marker.clearMarkers();
+        }
     }
 
     @Override
     public CommonMarker createMarker(String id, String name, String worldName, int x, int y, int z, boolean b) {
-
         Point point = Point.of(x, z);
-        id = id.replace(" ", "_");
-        Marker marker = Marker.icon(point,Key.of("diamond"),1);
-        markerSet.addMarker(Key.of(id), marker);
+
+
+
+
+
+        Marker marker = Marker.icon(point,Key.of("landmark"),8);
+
+        Marker markerTest = Marker.circle(point,10);
+
+        layerMap.get(Key.of(worldName)).addMarker(Key.of(id), marker);
+        layerMap.get(Key.of(worldName)).addMarker(Key.of(id+"_2"), markerTest);
+
+        System.out.println("Created marker with id: " + id);
         return new SquaremapMarker(marker);
     }
 
     @Override
     public CommonAreaMarker findAreaMarker(String polyID) {
-        Marker areaMarker = markerSet.registeredMarkers().get(Key.of(polyID));
+        SimpleLayerProvider layer = layerMap.get(Key.of(polyID));
+        if(layer == null){
+            return null;
+        }
+        Marker areaMarker = layerMap.get(Key.of(polyID)).registeredMarkers().get(Key.of(polyID));
         return new SquaremapAreaMarker(areaMarker);
     }
 
@@ -58,9 +71,6 @@ public class SquaremapMarkerSet implements CommonMarkerSet {
             pointList.add(Point.of(x[i], z[i]));
         }
 
-        String regex = "[^a-zA-Z0-9._-]";
-        polyID = polyID.replaceAll(regex, "_");
-
         MarkerOptions options = MarkerOptions.builder().
                 fillColor(color).
                 fillOpacity(0.5).
@@ -72,7 +82,7 @@ public class SquaremapMarkerSet implements CommonMarkerSet {
 
         Marker marker = Marker.polygon(pointList).markerOptions(options);
 
-        markerSet.addMarker(Key.of(polyID), marker);
+        layerMap.get(Key.of(worldName)).addMarker(Key.of(polyID), marker);
         return new SquaremapAreaMarker(marker);
     }
 }

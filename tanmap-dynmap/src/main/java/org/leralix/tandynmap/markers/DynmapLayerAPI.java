@@ -2,14 +2,14 @@ package org.leralix.tandynmap.markers;
 
 
 import org.dynmap.markers.MarkerAPI;
-import org.leralix.tancommon.markers.CommonMarkerAPI;
+import org.leralix.tancommon.markers.CommonLayerAPI;
 import org.leralix.tancommon.markers.CommonMarkerSet;
 
-public class DynmapMarkerAPI extends CommonMarkerAPI {
+public class DynmapLayerAPI extends CommonLayerAPI {
 
     private final MarkerAPI dynmapAPI;
 
-    public DynmapMarkerAPI(MarkerAPI api){
+    public DynmapLayerAPI(MarkerAPI api){
         this.dynmapAPI = api;
     }
 
@@ -22,7 +22,6 @@ public class DynmapMarkerAPI extends CommonMarkerAPI {
     @Override
     public CommonMarkerSet createMarkerSet(String id, String layerName, int minZoom, int chunkLayerPriority, boolean hideByDefault) {
         CommonMarkerSet markerSet = new DynmapMarkerSet(dynmapAPI, id, layerName, minZoom, chunkLayerPriority, hideByDefault);
-        commonMarkerSetList.put(id, markerSet);
         return markerSet;
     }
 

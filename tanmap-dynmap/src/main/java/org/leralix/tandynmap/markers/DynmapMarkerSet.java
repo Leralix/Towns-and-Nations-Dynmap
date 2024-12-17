@@ -9,8 +9,8 @@ import java.awt.*;
 
 public class DynmapMarkerSet implements CommonMarkerSet {
 
-    MarkerAPI markerAPI;
-    MarkerSet markerSet;
+    private final MarkerAPI markerAPI;
+    private final MarkerSet markerSet;
 
     public DynmapMarkerSet(MarkerAPI markerAPI, String id, String layerName, int minZoom, int chunkLayerPriority, boolean hideByDefault) {
         this.markerAPI = markerAPI;
@@ -26,12 +26,6 @@ public class DynmapMarkerSet implements CommonMarkerSet {
         for (AreaMarker areaMarker : markerSet.getAreaMarkers()){
             areaMarker.deleteMarker();
         }
-    }
-
-    @Override
-    public CommonMarker findMarker(String id) {
-        Marker marker = markerSet.findMarker(id);
-        return new DynmapMarker(marker);
     }
 
     @Override

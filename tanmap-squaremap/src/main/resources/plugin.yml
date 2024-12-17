@@ -1,4 +1,4 @@
-name: tan_dynmap
+name: tanmap-squaremap
 version: '${version}'
 main: org.leralix.tansquaremap.TownsAndNationsSquaremap
 api-version: '1.20'

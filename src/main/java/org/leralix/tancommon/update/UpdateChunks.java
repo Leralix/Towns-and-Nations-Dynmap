@@ -14,9 +14,9 @@ import java.util.Map;
 
 public class UpdateChunks implements Runnable {
 
-    final Map<String, CommonAreaMarker> chunkMap;
-    final ChunkManager chunkManager;
-    final Long updatePeriod;
+    private final Map<String, CommonAreaMarker> chunkMap;
+    private final ChunkManager chunkManager;
+    private final Long updatePeriod;
 
     public UpdateChunks(ChunkManager chunkManager, long updatePeriod) {
         this.chunkManager = chunkManager;
@@ -37,11 +37,6 @@ public class UpdateChunks implements Runnable {
 
 
     public void update() {
-
-        //Reset old markers
-        for (CommonAreaMarker areaMarker : chunkMap.values()){
-            areaMarker.deleteMarker();
-        }
 
         //Update town and regions descriptions
         for(TownData townData : TownDataStorage.getTownMap().values()){

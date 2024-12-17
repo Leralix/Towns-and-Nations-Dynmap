@@ -7,7 +7,6 @@ public interface CommonMarkerSet {
 
     void deleteAllMarkers();
 
-    CommonMarker findMarker(String id);
     CommonMarker createMarker(String id, String landmark, String worldName, int x, int y, int z, boolean b);
 
     CommonAreaMarker findAreaMarker(String polyID);

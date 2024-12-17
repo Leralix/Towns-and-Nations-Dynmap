@@ -18,7 +18,6 @@ import java.util.*;
 
 public class ChunkManager {
 
-    private final Map<String, CommonAreaMarker> areaMap = new HashMap<>();
     private final CommonMarkerSet set;
     private final AreaStyle townAreaStyle;
     private final AreaStyle regionAreaStyle;
@@ -188,11 +187,7 @@ public class ChunkManager {
             }
             claimedChunksToDraw = townBlockLeftToDraw; /* Replace list (null if no more to process) */
             if(ourShape != null) {
-                try {
-                    polyIndex = traceTownOutline(regionData, newWorldNameAreaMarkerMap, polyIndex, infoWindowPopup, currentWorld.getName(), ourShape, minx, minz);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+                polyIndex = traceRegionOutline(regionData, newWorldNameAreaMarkerMap, polyIndex, infoWindowPopup, currentWorld.getName(), ourShape, minx, minz);
             }
         }
 
@@ -224,8 +219,8 @@ public class ChunkManager {
             }
         }
     }
-    private int traceTownOutline(RegionData regionData, Map<String, CommonAreaMarker> newWorldNameMarkerMap, int poly_index,
-                                 String infoWindowPopup, String worldName, TileFlags ourShape, int minx, int minz) throws Exception {
+    private int traceRegionOutline(RegionData regionData, Map<String, CommonAreaMarker> newWorldNameMarkerMap, int poly_index,
+                                   String infoWindowPopup, String worldName, TileFlags ourShape, int minx, int minz) {
 
         double[] x;
         double[] z;
@@ -298,7 +293,7 @@ public class ChunkManager {
             }
         }
         /* Build information for specific area */
-        String polyid = regionData.getName() + "__" + poly_index;
+        String polyid = regionData.getID() + "_" + poly_index;
         int sz = linelist.size();
         x = new double[sz];
         z = new double[sz];
@@ -310,11 +305,11 @@ public class ChunkManager {
         /* Find existing one */
         CommonAreaMarker areaMarker = existingAreaMarkers.remove(polyid);
         if(areaMarker == null) {
-            areaMarker = set.createAreaMarker(polyid, regionData.getName(), false, worldName, x, z, regionData.getChunkColor().getColor(),infoWindowPopup);
+            areaMarker = set.findAreaMarker(polyid);
             if(areaMarker == null) {
-                areaMarker = set.findAreaMarker(polyid);
+                areaMarker = set.createAreaMarker(polyid, regionData.getName(), false, worldName, x, z, regionData.getChunkColor().getColor(),infoWindowPopup);
                 if (areaMarker == null) {
-                    throw new Exception("Error adding area marker " + polyid);
+                   return poly_index;
                 }
             }
         }
@@ -409,7 +404,7 @@ public class ChunkManager {
             }
         }
         /* Build information for specific area */
-        String polyid = town.getName() + "__" + poly_index;
+        String polyid = town.getID() + "_" + poly_index;
         int sz = linelist.size();
         x = new double[sz];
         z = new double[sz];
@@ -448,21 +443,11 @@ public class ChunkManager {
     }
 
     private void addStyle(TownData town, CommonAreaMarker m) {
-
         m.setLineStyle(townAreaStyle.getBaseStrokeWeight(), townAreaStyle.getStrokeOpacity(), town.getChunkColorCode());
         m.setFillStyle(townAreaStyle.getFillOpacity(), town.getChunkColorCode());
-
-        m.setRangeY(16, 16); //TODO : check if this is usefull
-        //m.setBoostFlag(defstyle.getBoost(as, ns)); //TODO : Why is it commented ?
-
     }
     private void addStyle(RegionData region, CommonAreaMarker m) {
-
         m.setLineStyle(regionAreaStyle.getBaseStrokeWeight(), regionAreaStyle.getStrokeOpacity(), region.getChunkColorCode());
         m.setFillStyle(regionAreaStyle.getFillOpacity(), region.getChunkColorCode());
-
-        m.setRangeY(16, 16);
-        //m.setBoostFlag(defstyle.getBoost(as, ns));
-
     }
 }
