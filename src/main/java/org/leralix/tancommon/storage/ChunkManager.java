@@ -428,7 +428,6 @@ public class ChunkManager {
             areaMarker.setCornerLocations(x, z);
             areaMarker.setLabel(town.getName());
         }
-        areaMarker.setDescription(infoWindowPopup);
         addStyle(town, areaMarker);
 
         /* Fire an event allowing other plugins to alter the AreaMarker */

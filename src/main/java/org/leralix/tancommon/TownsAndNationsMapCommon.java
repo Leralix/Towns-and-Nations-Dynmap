@@ -64,12 +64,7 @@ public abstract class TownsAndNationsMapCommon extends JavaPlugin {
             return;
         }
 
-        File iconsDir = new File(getDataFolder(), "icons");
-        if (!iconsDir.exists()) {
-            iconsDir.mkdirs(); // Crée le dossier s'il n'existe pas
-        }
-
-        TownsAndNationsMapCommon.getPlugin().saveResource("icons/landmark.png", true);
+        registerIcons();
 
 
         Objects.requireNonNull(getCommand("tanmap")).setExecutor(new CommandManager());
@@ -79,6 +74,8 @@ public abstract class TownsAndNationsMapCommon extends JavaPlugin {
 
         logger.info("[TaN - " + getSubMapName() + "] -Towns and Nations - map is running");
     }
+
+    protected abstract void registerIcons();
 
     private void initialise(Plugin mapPlugin) {
         markerAPI = createMarkerAPI(mapPlugin);

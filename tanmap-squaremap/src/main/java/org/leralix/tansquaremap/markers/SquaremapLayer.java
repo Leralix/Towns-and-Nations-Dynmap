@@ -1,23 +1,23 @@
 package org.leralix.tansquaremap.markers;
 
+import org.leralix.tan.dataclass.Landmark;
 import org.leralix.tancommon.markers.CommonAreaMarker;
 import org.leralix.tancommon.markers.CommonMarker;
 import org.leralix.tancommon.markers.CommonMarkerSet;
+import org.leralix.tancommon.markers.IconType;
 import xyz.jpenilla.squaremap.api.Key;
 import xyz.jpenilla.squaremap.api.Point;
 import xyz.jpenilla.squaremap.api.SimpleLayerProvider;
+import xyz.jpenilla.squaremap.api.SquaremapProvider;
 import xyz.jpenilla.squaremap.api.marker.Marker;
 import xyz.jpenilla.squaremap.api.marker.MarkerOptions;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SquaremapLayer implements CommonMarkerSet {
+public class SquaremapLayer extends CommonMarkerSet {
 
     Map<Key, SimpleLayerProvider> layerMap;
 
@@ -34,21 +34,21 @@ public class SquaremapLayer implements CommonMarkerSet {
     }
 
     @Override
-    public CommonMarker createMarker(String id, String name, String worldName, int x, int y, int z, boolean b) {
+    public CommonMarker createLandmark(Landmark landmark, String name, String worldName, int x, int y, int z, boolean b) {
         Point point = Point.of(x, z);
 
+        MarkerOptions markerOptions = MarkerOptions.builder().
+                hoverTooltip(generateDescription(landmark)).
+                build();
 
+        String imageKey = landmark.getOwnerID() != null ?
+                IconType.LANDMARK_CLAIMED.getFileName():
+                IconType.LANDMARK_UNCLAIMED.getFileName();
 
+        Marker marker = Marker.icon(point,Key.of(imageKey),16).markerOptions(markerOptions);
 
+        layerMap.get(Key.of(worldName)).addMarker(Key.of(landmark.getID()), marker);
 
-        Marker marker = Marker.icon(point,Key.of("landmark"),8);
-
-        Marker markerTest = Marker.circle(point,10);
-
-        layerMap.get(Key.of(worldName)).addMarker(Key.of(id), marker);
-        layerMap.get(Key.of(worldName)).addMarker(Key.of(id+"_2"), markerTest);
-
-        System.out.println("Created marker with id: " + id);
         return new SquaremapMarker(marker);
     }
 

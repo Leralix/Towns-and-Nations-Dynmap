@@ -21,8 +21,7 @@ public class DynmapLayerAPI extends CommonLayerAPI {
 
     @Override
     public CommonMarkerSet createMarkerSet(String id, String layerName, int minZoom, int chunkLayerPriority, boolean hideByDefault) {
-        CommonMarkerSet markerSet = new DynmapMarkerSet(dynmapAPI, id, layerName, minZoom, chunkLayerPriority, hideByDefault);
-        return markerSet;
+        return new DynmapMarkerSet(dynmapAPI, id, layerName, minZoom, chunkLayerPriority, hideByDefault);
     }
 
 }

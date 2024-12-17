@@ -11,12 +11,7 @@ import xyz.jpenilla.squaremap.api.*;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.Buffer;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 public class SquaremapLayerAPI extends CommonLayerAPI {
@@ -26,17 +21,6 @@ public class SquaremapLayerAPI extends CommonLayerAPI {
     public SquaremapLayerAPI(){
         super();
         this.api = SquaremapProvider.get();
-
-        BufferedImage image;
-
-        try {
-            File file = new File(TownsAndNationsMapCommon.getPlugin().getDataFolder(), "icons/landmark.png");
-            image = ImageIO.read(file);
-        } catch (IOException e) {
-            throw new RuntimeException("Erreur lors du chargement de landmark.png", e);
-        }
-
-        api.iconRegistry().register(Key.of("landmark"),image);
     }
 
 
@@ -47,7 +31,6 @@ public class SquaremapLayerAPI extends CommonLayerAPI {
 
     @Override
     public CommonMarkerSet createMarkerSet(String id, String layerName, int minZoom, int chunkLayerPriority, boolean hideByDefault) {
-
 
         Map<Key, SimpleLayerProvider> simpleLayerProviderMap = new HashMap<>();
 

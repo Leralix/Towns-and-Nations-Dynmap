@@ -11,18 +11,4 @@ public class SquaremapMarker implements CommonMarker {
         this.marker = marker;
     }
 
-    @Override
-    public void deleteMarker() {
-
-    }
-
-    @Override
-    public void setDescription(String newDescription) {
-
-    }
-
-    @Override
-    public void setLocation(String worldName, int x, int y, int z) {
-
-    }
 }

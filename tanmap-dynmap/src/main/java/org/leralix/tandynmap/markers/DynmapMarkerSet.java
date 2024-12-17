@@ -1,13 +1,14 @@
 package org.leralix.tandynmap.markers;
 
 import org.dynmap.markers.*;
+import org.leralix.tan.dataclass.Landmark;
 import org.leralix.tancommon.markers.CommonAreaMarker;
 import org.leralix.tancommon.markers.CommonMarker;
 import org.leralix.tancommon.markers.CommonMarkerSet;
 
 import java.awt.*;
 
-public class DynmapMarkerSet implements CommonMarkerSet {
+public class DynmapMarkerSet extends CommonMarkerSet {
 
     private final MarkerAPI markerAPI;
     private final MarkerSet markerSet;
@@ -29,8 +30,9 @@ public class DynmapMarkerSet implements CommonMarkerSet {
     }
 
     @Override
-    public CommonMarker createMarker(String id, String name, String worldName, int x, int y, int z, boolean b) {
-        Marker marker = markerSet.createMarker(id, name, worldName, x, y, z, markerAPI.getMarkerIcon("diamond"), b);
+    public CommonMarker createLandmark(Landmark landmark, String name, String worldName, int x, int y, int z, boolean b) {
+        Marker marker = markerSet.createMarker(landmark.getID(), name, worldName, x, y, z, markerAPI.getMarkerIcon("diamond"), b);
+        marker.setDescription(generateDescription(landmark));
         return new DynmapMarker(marker);
     }
 
@@ -43,6 +45,7 @@ public class DynmapMarkerSet implements CommonMarkerSet {
     @Override
     public CommonAreaMarker createAreaMarker(String polyID, String name, boolean b, String worldName, double[] x, double[] z, Color color, String description) {
         AreaMarker marker = markerSet.createAreaMarker(polyID, name, b, worldName, x, z, false);
+        marker.setDescription(description);
         return new DynmapAreaMarker(marker);
     }
 }
