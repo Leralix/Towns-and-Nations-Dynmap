@@ -7,6 +7,7 @@ import org.leralix.tan.TownsAndNations;
 import org.leralix.tan.dataclass.chunk.RegionClaimedChunk;
 import org.leralix.tan.dataclass.chunk.TownClaimedChunk;
 import org.leralix.tan.dataclass.territory.RegionData;
+import org.leralix.tan.dataclass.territory.TerritoryData;
 import org.leralix.tan.dataclass.territory.TownData;
 import org.leralix.tancommon.markers.CommonAreaMarker;
 import org.leralix.tancommon.markers.CommonMarkerSet;
@@ -105,7 +106,7 @@ public class ChunkManager {
             claimedChunksToDraw = townBlockLeftToDraw; /* Replace list (null if no more to process) */
             if(ourShape != null) {
                 try {
-                    polyIndex = traceTownOutline(townData, newWorldNameAreaMarkerMap, polyIndex, infoWindowPopup, currentWorld.getName(), ourShape, minx, minz);
+                    polyIndex = traceTerritoryOutline(townData, newWorldNameAreaMarkerMap, polyIndex, infoWindowPopup, currentWorld.getName(), ourShape, minx, minz);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -187,7 +188,7 @@ public class ChunkManager {
             }
             claimedChunksToDraw = townBlockLeftToDraw; /* Replace list (null if no more to process) */
             if(ourShape != null) {
-                polyIndex = traceRegionOutline(regionData, newWorldNameAreaMarkerMap, polyIndex, infoWindowPopup, currentWorld.getName(), ourShape, minx, minz);
+                polyIndex = traceTerritoryOutline(regionData, newWorldNameAreaMarkerMap, polyIndex, infoWindowPopup, currentWorld.getName(), ourShape, minx, minz);
             }
         }
 
@@ -219,8 +220,9 @@ public class ChunkManager {
             }
         }
     }
-    private int traceRegionOutline(RegionData regionData, Map<String, CommonAreaMarker> newWorldNameMarkerMap, int poly_index,
-                                   String infoWindowPopup, String worldName, TileFlags ourShape, int minx, int minz) {
+
+    private int traceTerritoryOutline(TerritoryData territoryData, Map<String, CommonAreaMarker> newWorldNameMarkerMap, int polyIndex,
+                                      String infoWindowPopup, String worldName, TileFlags ourShape, int minx, int minz) {
 
         double[] x;
         double[] z;
@@ -293,7 +295,7 @@ public class ChunkManager {
             }
         }
         /* Build information for specific area */
-        String polyid = regionData.getID() + "_" + poly_index;
+        String polyid = territoryData.getID() + "_" + polyIndex;
         int sz = linelist.size();
         x = new double[sz];
         z = new double[sz];
@@ -305,148 +307,33 @@ public class ChunkManager {
         /* Find existing one */
         CommonAreaMarker areaMarker = existingAreaMarkers.remove(polyid);
         if(areaMarker == null) {
-            areaMarker = set.findAreaMarker(polyid);
-            if(areaMarker == null) {
-                areaMarker = set.createAreaMarker(polyid, regionData.getName(), false, worldName, x, z, regionData.getChunkColor().getColor(),infoWindowPopup);
-                if (areaMarker == null) {
-                   return poly_index;
-                }
-            }
-        }
-        else {
-            areaMarker.setCornerLocations(x, z);
-            areaMarker.setLabel(regionData.getName());
-        }
-        /* Set line and fill properties */
-        addStyle(regionData, areaMarker);
-
-        /* Fire an event allowing other plugins to alter the AreaMarker */
-        RegionRenderEvent renderEvent = new RegionRenderEvent(regionData, areaMarker);
-        Bukkit.getPluginManager().callEvent(renderEvent);
-        areaMarker = renderEvent.getAreaMarker();
-
-        /* Add to map */
-        newWorldNameMarkerMap.put(polyid, areaMarker);
-        poly_index++;
-        return poly_index;
-    }
-    private int traceTownOutline(TownData town, Map<String, CommonAreaMarker> newWorldNameMarkerMap, int poly_index,
-                                        String infoWindowPopup, String worldName, TileFlags ourShape, int minx, int minz) throws Exception {
-
-        double[] x;
-        double[] z;
-        /* Trace outline of blocks - start from minx, minz going to x+ */
-        int init_x = minx;
-        int init_z = minz;
-        int cur_x = minx;
-        int cur_z = minz;
-        direction dir = direction.XPLUS;
-        ArrayList<int[]> linelist = new ArrayList<>();
-        linelist.add(new int[] { init_x, init_z } ); // Add start point
-        while((cur_x != init_x) || (cur_z != init_z) || (dir != direction.ZMINUS)) {
-            switch(dir) {
-                case XPLUS: /* Segment in X+ direction */
-                    if(!ourShape.getFlag(cur_x+1, cur_z)) { /* Right turn? */
-                        linelist.add(new int[] { cur_x+1, cur_z }); /* Finish line */
-                        dir = direction.ZPLUS;  /* Change direction */
-                    }
-                    else if(!ourShape.getFlag(cur_x+1, cur_z-1)) {  /* Straight? */
-                        cur_x++;
-                    }
-                    else {  /* Left turn */
-                        linelist.add(new int[] { cur_x+1, cur_z }); /* Finish line */
-                        dir = direction.ZMINUS;
-                        cur_x++; cur_z--;
-                    }
-                    break;
-                case ZPLUS: /* Segment in Z+ direction */
-                    if(!ourShape.getFlag(cur_x, cur_z+1)) { /* Right turn? */
-                        linelist.add(new int[] { cur_x+1, cur_z+1 }); /* Finish line */
-                        dir = direction.XMINUS;  /* Change direction */
-                    }
-                    else if(!ourShape.getFlag(cur_x+1, cur_z+1)) {  /* Straight? */
-                        cur_z++;
-                    }
-                    else {  /* Left turn */
-                        linelist.add(new int[] { cur_x+1, cur_z+1 }); /* Finish line */
-                        dir = direction.XPLUS;
-                        cur_x++; cur_z++;
-                    }
-                    break;
-                case XMINUS: /* Segment in X- direction */
-                    if(!ourShape.getFlag(cur_x-1, cur_z)) { /* Right turn? */
-                        linelist.add(new int[] { cur_x, cur_z+1 }); /* Finish line */
-                        dir = direction.ZMINUS;  /* Change direction */
-                    }
-                    else if(!ourShape.getFlag(cur_x-1, cur_z+1)) {  /* Straight? */
-                        cur_x--;
-                    }
-                    else {  /* Left turn */
-                        linelist.add(new int[] { cur_x, cur_z+1 }); /* Finish line */
-                        dir = direction.ZPLUS;
-                        cur_x--; cur_z++;
-                    }
-                    break;
-                case ZMINUS: /* Segment in Z- direction */
-                    if(!ourShape.getFlag(cur_x, cur_z-1)) { /* Right turn? */
-                        linelist.add(new int[] { cur_x, cur_z }); /* Finish line */
-                        dir = direction.XPLUS;  /* Change direction */
-                    }
-                    else if(!ourShape.getFlag(cur_x-1, cur_z-1)) {  /* Straight? */
-                        cur_z--;
-                    }
-                    else {  /* Left turn */
-                        linelist.add(new int[] { cur_x, cur_z }); /* Finish line */
-                        dir = direction.XMINUS;
-                        cur_x--; cur_z--;
-                    }
-                    break;
-            }
-        }
-        /* Build information for specific area */
-        String polyid = town.getID() + "_" + poly_index;
-        int sz = linelist.size();
-        x = new double[sz];
-        z = new double[sz];
-        for(int i = 0; i < sz; i++) {
-            int[] line = linelist.get(i);
-            x[i] = (double)line[0] * (double)16;
-            z[i] = (double)line[1] * (double)16;
-        }
-        /* Find existing one */
-        CommonAreaMarker areaMarker = existingAreaMarkers.remove(polyid);
-        if(areaMarker == null) {
-            areaMarker = set.createAreaMarker(polyid, town.getName(), false, worldName, x, z, town.getChunkColor().getColor(), infoWindowPopup);
+            areaMarker = set.createAreaMarker(polyid, territoryData.getName(), false, worldName, x, z, territoryData.getChunkColor().getColor(), infoWindowPopup);
             if(areaMarker == null) {
                 areaMarker = set.findAreaMarker(polyid);
                 if (areaMarker == null) {
-                    throw new Exception("Error adding area marker " + polyid);
+                    return polyIndex;
                 }
             }
         }
         else {
             areaMarker.setCornerLocations(x, z);
-            areaMarker.setLabel(town.getName());
+            areaMarker.setLabel(territoryData.getName());
         }
-        addStyle(town, areaMarker);
+        addStyle(territoryData, areaMarker);
 
         /* Fire an event allowing other plugins to alter the AreaMarker */
-        TownRenderEvent renderEvent = new TownRenderEvent(town, areaMarker);
+        TownRenderEvent renderEvent = new TownRenderEvent(areaMarker);
         Bukkit.getPluginManager().callEvent(renderEvent);
         areaMarker = renderEvent.getAreaMarker();
 
         /* Add to map */
         newWorldNameMarkerMap.put(polyid, areaMarker);
-        poly_index++;
-        return poly_index;
+        polyIndex++;
+        return polyIndex;
     }
 
-    private void addStyle(TownData town, CommonAreaMarker m) {
-        m.setLineStyle(townAreaStyle.getBaseStrokeWeight(), townAreaStyle.getStrokeOpacity(), town.getChunkColorCode());
-        m.setFillStyle(townAreaStyle.getFillOpacity(), town.getChunkColorCode());
-    }
-    private void addStyle(RegionData region, CommonAreaMarker m) {
-        m.setLineStyle(regionAreaStyle.getBaseStrokeWeight(), regionAreaStyle.getStrokeOpacity(), region.getChunkColorCode());
-        m.setFillStyle(regionAreaStyle.getFillOpacity(), region.getChunkColorCode());
+    private void addStyle(TerritoryData territoryData, CommonAreaMarker m) {
+        m.setLineStyle(townAreaStyle.getBaseStrokeWeight(), townAreaStyle.getStrokeOpacity(), territoryData.getChunkColorCode());
+        m.setFillStyle(townAreaStyle.getFillOpacity(), territoryData.getChunkColorCode());
     }
 }
